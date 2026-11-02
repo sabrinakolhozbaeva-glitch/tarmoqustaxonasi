@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="Sabrina Bazarbaevna">
+<title>Tarmoq ustaxonasi — laboratoriya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--ink:#0a111d;--panel:#111b2c;--panel2:#172438;--line:#243450;--fg:#e9eff8;--muted:#93a4bd;--dim:#5d6f8a;--blue:#4c8dff;--blue2:#2f62c9;--orange:#f28b3c;--green:#3dd598;--red:#ff5f5f;--gold:#e8c35a;--violet:#a98bff;--bar:rgba(10,17,29,.9);
+ --fd:"Chakra Petch","Segoe UI",system-ui,sans-serif;--fb:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;--fm:"IBM Plex Mono",ui-monospace,Consolas,monospace;color-scheme:dark}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--ink:#eef2f8;--panel:#fff;--panel2:#eaf0f8;--line:#d3dbe8;--fg:#0f1a2b;--muted:#4b5a72;--dim:#7a879c;--blue:#2459c4;--orange:#d2661c;--green:#11875a;--red:#cf3434;--gold:#a87b0c;--bar:rgba(255,255,255,.92);color-scheme:light}}
+:root[data-theme="light"]{--ink:#eef2f8;--panel:#fff;--panel2:#eaf0f8;--line:#d3dbe8;--fg:#0f1a2b;--muted:#4b5a72;--dim:#7a879c;--blue:#2459c4;--orange:#d2661c;--green:#11875a;--red:#cf3434;--gold:#a87b0c;--bar:rgba(255,255,255,.92);color-scheme:light}
+*,*::before,*::after{box-sizing:border-box}[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{background:var(--ink);color:var(--fg);font-family:var(--fb);font-size:15px;overflow:hidden}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+.app{position:fixed;inset:0;display:grid;grid-template-rows:auto minmax(0,1fr)}
+.topbar{display:flex;align-items:center;gap:12px;padding:8px 16px;border-bottom:1px solid var(--line);background:var(--bar);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-family:var(--fd);font-weight:700;letter-spacing:.06em;font-size:13px;text-transform:uppercase;white-space:nowrap}
+.brand svg{width:20px;height:20px}
+.ttl{font-family:var(--fd);font-weight:600;font-size:16px;white-space:nowrap}
+.sp{flex:1}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:transparent;padding:7px 12px;font-size:13px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--orange);color:#1a0d02}
+.ib{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:13px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.ib:hover{border-color:var(--blue)}
+.teacher{font-size:12.5px;color:var(--muted);white-space:nowrap}.teacher b{color:var(--fg)}
+.main{display:grid;grid-template-columns:178px minmax(0,1fr) 440px;min-height:0}
+.pal{border-right:1px solid var(--line);padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;background:var(--panel)}
+.plbl{font-size:11.5px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin:8px 0 2px}
+.pbtn{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:9px;border:1px solid var(--line);background:var(--panel2);text-align:left;font-size:13.5px;font-weight:500}
+.pbtn:hover{border-color:var(--orange)}
+.pbtn svg{width:34px;height:26px;flex:none}
+.tbtn{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;border:1px solid var(--line);background:var(--panel2);font-size:13.5px;font-weight:600;text-align:left}
+.tbtn.on{background:var(--orange);color:#1a0d02;border-color:var(--orange)}
+.cab{display:flex;flex-direction:column;gap:4px;padding-left:6px}
+.cab label{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:3px 4px;border-radius:6px}
+.cab label.on{background:rgba(242,139,60,.13)}
+.cab i{width:26px;height:0;border-top:3px solid;display:inline-block}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:13px;cursor:pointer;line-height:1.35}
+.chk input{margin-top:2px;accent-color:var(--orange)}
+.work{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column}
+.cvwrap{position:relative;flex:1;min-height:0;background:#0b1322;background-image:linear-gradient(rgba(90,130,200,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(90,130,200,.07) 1px,transparent 1px);background-size:25px 25px;overflow:hidden}
+#cv{position:absolute;inset:0;width:100%;height:100%;touch-action:none;user-select:none}
+#cv .dv{cursor:grab}
+.hint{position:absolute;left:12px;top:10px;font-size:13px;color:#cfd8e6;background:rgba(10,17,29,.85);border:1px solid #243450;border-radius:9px;padding:6px 10px;pointer-events:none;max-width:70%}
+.legend{position:absolute;left:12px;bottom:10px;display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#93a4bd;background:rgba(10,17,29,.85);border:1px solid #243450;border-radius:9px;padding:6px 10px;pointer-events:none}
+.legend span{display:flex;align-items:center;gap:6px}.legend i{width:22px;border-top:3px solid;display:inline-block}
+.pmenu{position:absolute;z-index:6;background:#111b2c;border:1px solid #f28b3c;border-radius:10px;padding:6px;display:flex;flex-direction:column;gap:3px;min-width:150px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.pmenu b{font-size:12px;color:#93a4bd;padding:2px 6px}
+.pmenu button{text-align:left;border:1px solid #243450;background:#172438;border-radius:7px;padding:5px 8px;font-family:var(--fm);font-size:13px;color:#e9eff8}
+.pmenu button:hover{border-color:#f28b3c}
+.side{border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:var(--panel)}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;border:0;background:transparent;padding:11px 6px;font-weight:600;font-size:13.5px;color:var(--muted);border-bottom:3px solid transparent}
+.tabs button.on{color:var(--fg);border-bottom-color:var(--orange)}
+.tabs button:disabled{opacity:.4;cursor:not-allowed}
+.body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;min-height:0}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.card h3{margin:0 0 6px;font-family:var(--fd);font-size:17px}
+.muted{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:5px 9px;font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:5px}
+.chip.on{border-color:var(--orange);background:rgba(242,139,60,.14)}
+.chip.done{border-color:var(--green)}
+.chip .sc{font-family:var(--fm);font-size:11px;color:var(--green)}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.steps li{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;line-height:1.45}
+.steps li i{flex:none;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--dim);display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:700;margin-top:1px}
+.steps li.ok i{background:var(--green);border-color:var(--green);color:#03150d}
+.steps li.ok span{color:var(--muted)}
+.ticket{border-left:3px solid var(--orange);background:rgba(242,139,60,.07);border-radius:0 10px 10px 0;padding:10px 12px;font-size:14px;line-height:1.5}
+.ticket small{display:block;color:var(--dim);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.btn{color:#fff;background:var(--blue2);border:1px solid var(--blue);border-radius:9px;padding:8px 13px;font-weight:600;font-size:13.5px}
+.btn:hover{filter:brightness(1.12)}
+.btn.or{background:#b85b1a;border-color:var(--orange)}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--fg)}
+.btn.gr{background:#167a52;border-color:var(--green)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.hintbox{font-size:13.5px;line-height:1.5;border:1px dashed var(--gold);border-radius:10px;padding:8px 10px;color:var(--fg)}
+.fld{display:grid;grid-template-columns:96px 1fr;gap:6px 10px;align-items:center;font-size:13.5px}
+.fld label{color:var(--muted)}
+.fld input,.fld select,.mini{background:var(--ink);border:1px solid var(--line);border-radius:7px;padding:6px 8px;font-family:var(--fm);font-size:13.5px;width:100%;min-width:0}
+.fld input:disabled{opacity:.45}
+input.bad{border-color:var(--red)!important}
+.sect{font-family:var(--fd);font-weight:600;font-size:14.5px;margin:4px 0 2px;display:flex;align-items:center;gap:8px}
+.iftab{width:100%;border-collapse:collapse;font-size:13px}
+.iftab td,.iftab th{padding:4px 4px;border-bottom:1px solid var(--line);text-align:left}
+.iftab th{color:var(--dim);font-weight:500;font-size:12px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--dim)}.dot.g{background:var(--green)}.dot.r{background:var(--red)}.dot.y{background:var(--gold)}
+.live{font-family:var(--fm);font-size:12.5px;line-height:1.6;background:var(--ink);border:1px solid var(--line);border-radius:9px;padding:8px 10px;white-space:pre-wrap}
+.live .g{color:var(--green)}.live .r{color:var(--red)}.live .y{color:var(--gold)}
+.term{display:flex;flex-direction:column;background:#05080f;border:1px solid #243450;border-radius:11px;min-height:340px;flex:1;overflow:hidden}
+.tout{flex:1;overflow-y:auto;padding:10px 12px;font-family:var(--fm);font-size:12px;line-height:1.5;color:#cfe0ff;white-space:pre;overflow-x:auto;min-height:200px}
+.tout .c{color:#93a4bd}.tout .ok{color:#7ff0bd}.tout .bad{color:#ff8a8a}.tout .hl{color:#ffd27a}
+.tin{display:flex;align-items:center;gap:6px;border-top:1px solid #243450;padding:8px 10px;font-family:var(--fm);font-size:13px;color:#93a4bd}
+.tin input{flex:1;background:transparent;border:0;outline:0;color:#e9eff8;font-family:var(--fm);font-size:13px;min-width:0}
+.qk{display:flex;flex-wrap:wrap;gap:5px}
+.qk button{font-family:var(--fm);font-size:11.5px;border:1px solid var(--line);background:var(--panel2);border-radius:6px;padding:3px 7px}
+.qk button:hover{border-color:var(--orange)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--panel);border:1px solid var(--orange);border-radius:11px;padding:10px 16px;font-size:14px;z-index:40;box-shadow:0 10px 30px rgba(0,0,0,.4);max-width:min(620px,92vw);transition:opacity .3s;opacity:0;pointer-events:none}
+.toast.on{opacity:1}
+.modal{position:fixed;inset:0;background:rgba(5,8,15,.72);display:grid;place-items:center;z-index:50;padding:16px}
+.mbox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.mbox h2{margin:0;font-family:var(--fd);font-size:24px}
+.mcards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mcards button{text-align:left;border:1px solid var(--line);background:var(--panel2);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:4px}
+.mcards button:hover{border-color:var(--orange)}
+.mcards b{font-family:var(--fd);font-size:16px}.mcards span{font-size:12.5px;color:var(--muted)}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left;border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:10px 12px;font-size:14.5px}
+.opts button.ok{border-color:var(--green);background:rgba(61,213,152,.15)}.opts button.no{border-color:var(--red);background:rgba(255,95,95,.12)}
+.rtab{width:100%;border-collapse:collapse;font-size:13.5px}.rtab td,.rtab th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}.rtab th{color:var(--dim);font-weight:500}
+.big{font-family:var(--fd);font-size:28px;font-weight:700}
+.win{border:1px solid var(--green);background:rgba(61,213,152,.09);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.5}
+.timer{font-family:var(--fm);font-size:13px;color:var(--muted)}
+.mbox.wide{max-width:1020px}
+.cr2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.rjend{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--panel2);display:flex;flex-direction:column;gap:8px;cursor:pointer}
+.rjend.on{border-color:var(--orange);box-shadow:0 0 0 3px rgba(242,139,60,.15)}
+.rjt{font-family:var(--fd);font-weight:700;font-size:16px;display:flex;gap:8px;align-items:center}
+.rj{margin:4px auto 0;width:300px;height:140px;background:linear-gradient(180deg,rgba(220,235,255,.28),rgba(200,220,245,.1));border:2px solid rgba(190,210,240,.55);border-bottom:0;border-radius:12px 12px 0 0;padding:12px 18px 0}
+.rjbody{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;height:126px}
+.pin{border:1.5px dashed var(--dim);border-radius:4px 4px 0 0;background:rgba(10,17,29,.25);position:relative;padding:0;transition:transform .15s}
+.pin::before{content:"";position:absolute;left:15%;right:15%;top:4px;height:10px;background:linear-gradient(#f3d98a,#c9a646);border-radius:2px}
+.pin.f{border:1px solid rgba(0,0,0,.4)}.pin:hover{transform:translateY(-2px)}
+.pin.focus{outline:3px solid var(--orange);outline-offset:1px}
+.rjnums{width:300px;margin:0 auto;display:grid;grid-template-columns:repeat(8,1fr);gap:5px;padding:0 18px;font-family:var(--fm);font-size:12px;color:var(--muted);text-align:center}
+.rjjacket{width:150px;height:20px;margin:-2px auto 0;background:#5d7ea8;border-radius:0 0 8px 8px}
+.rjlist{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;font-size:12px;color:var(--muted)}.rjlist b{font-family:var(--fm);color:var(--fg)}
+.tray{display:flex;flex-wrap:wrap;gap:8px}
+.wire{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel2);border-radius:9px;padding:7px 11px;font-size:13.5px;font-weight:500}
+.wire:hover{border-color:var(--orange)}.wire:disabled{opacity:.28;cursor:not-allowed}
+.wire i,.sw{display:inline-block;width:34px;height:12px;border-radius:6px;border:1px solid rgba(0,0,0,.35);vertical-align:middle}
+.reftab{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:8px}.reftab th{font-family:var(--fm);color:var(--muted);padding:3px;font-weight:500}.reftab td{text-align:center;padding:3px;border:1px solid var(--line)}.reftab td small{display:block;color:var(--muted);margin-top:3px}.reftab td .sw{width:100%}
+.bdg{font-family:var(--fm);font-size:12px;padding:2px 8px;border-radius:6px;font-weight:600}.bdg.ok{background:rgba(61,213,152,.18);color:var(--green)}.bdg.no{background:rgba(255,95,95,.16);color:var(--red)}
+.swrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;font-family:var(--fm);font-size:11px;color:var(--muted)}.swrow span{display:flex;flex-direction:column;align-items:center;gap:3px}.swrow .sw{width:22px;height:30px;border-radius:3px}
+.tl{opacity:0;animation:tlon .3s forwards}@keyframes tlon{to{opacity:1}}
+@media (max-width:800px){.cr2{grid-template-columns:1fr}}
+@media (max-width:1150px){body{overflow:auto}.app{position:static;min-height:100vh}.main{grid-template-columns:1fr}.pal{flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid var(--line)}.pbtn,.tbtn{flex:0 0 auto}.cvwrap{height:62vh;flex:none}.side{border-left:0;border-top:1px solid var(--line);min-height:520px}.teacher{display:none}}
+@media print{body *{visibility:hidden}#printArea,#printArea *{visibility:visible}#printArea{position:absolute;left:0;top:0;width:100%;color:#000;background:#fff}.noprint{display:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+ <header class="topbar">
+  <div class="brand"><svg viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7z" fill="#2f62c9"/><path d="M12 12l9-5v10l-9 5z" fill="#1d3f86"/><path d="M12 2l9 5-9 5-9-5z" fill="#6ea3ff"/></svg>Cyber University</div>
+  <div class="ttl" id="ttl"></div>
+  <div class="seg" id="modeSeg"></div>
+  <div class="sp"></div>
+  <span class="teacher" id="teacher"></span>
+  <button class="ib" id="stuBtn"></button>
+  <button class="ib" id="resBtn"></button>
+  <div class="seg" id="langSeg"><button data-l="uz">UZ</button><button data-l="en">EN</button></div>
+  <button class="ib" id="themeBtn">☀ / ☾</button>
+  <button class="ib" id="fsBtn">⛶</button>
+ </header>
+ <div class="main">
+  <aside class="pal" id="pal"></aside>
+  <section class="work">
+   <div class="cvwrap" id="cvwrap">
+    <svg id="cv" viewBox="0 0 1000 640" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="hint" id="hint"></div>
+    <div class="legend" id="legend"></div>
+    <div class="pmenu" id="pmenu" hidden></div>
+   </div>
+  </section>
+  <aside class="side"><div class="tabs" id="tabs"></div><div class="body" id="sbody"></div></aside>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+<div id="modalRoot"></div>
+<datalist id="masks"><option value="255.255.255.0"><option value="255.255.0.0"><option value="255.0.0.0"><option value="255.255.255.128"><option value="255.255.255.192"><option value="255.255.255.240"><option value="255.255.255.252"></datalist>
+<script>
+const __SRC='<!doctype html>\n'+document.documentElement.outerHTML;
+/* Google Sheets veb-ilova manzili (ustoz sozlaydi) */
+const SHEET_URL='https://script.google.com/macros/s/AKfycbzgDWMk9gPhgq7rYC1vJrUuGkWXq6jF2TClCB6x0XmZjNptzZBAs4CN76oN8DJ-85w7Lg/exec';
+/* ===================== basics ===================== */
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const NS='http://www.w3.org/2000/svg';
+function S(t,a={},p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let LANG='uz';try{LANG=localStorage.getItem('netlab-lang')||'uz'}catch(e){}
+const L=(u,e)=>LANG==='en'?(e==null?u:e):u;
+const LL=a=>L(a[0],a[1]);
+function toast(h,ms=3200){const t=$('#toast');t.innerHTML=h;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),ms)}
+
+/* ===================== IP utils ===================== */
+function ip2n(s){const p=String(s||'').trim().split('.');if(p.length!==4)return null;let n=0;for(const x of p){if(!/^\d{1,3}$/.test(x))return null;const v=+x;if(v>255)return null;n=n*256+v}return n>>>0}
+const n2ip=n=>[n>>>24,(n>>>16)&255,(n>>>8)&255,n&255].join('.');
+const validIP=s=>{const n=ip2n(s);return n!=null&&n!==0&&(n>>>24)!==0&&(n>>>24)<224};
+function validMask(s){const n=ip2n(s);if(n==null||n===0)return false;const inv=(~n)>>>0;return((inv+1)&inv)===0&&n!==0xFFFFFFFF}
+const sameNet=(a,b,m)=>{const A=ip2n(a),B=ip2n(b),M=ip2n(m);if(A==null||B==null||M==null)return false;return((A&M)>>>0)===((B&M)>>>0)};
+const isPriv=s=>{const n=ip2n(s);if(n==null)return false;const a=n>>>24,b=(n>>>16)&255;return a===10||(a===172&&b>=16&&b<=31)||(a===192&&b===168)||(a===169&&b===254)};
+const hostPart=(ip,m)=>{const A=ip2n(ip),M=ip2n(m);const h=(A&~M)>>>0,bc=(~M)>>>0;return{h,bc}};
+const usable=(ip,m)=>{if(!validIP(ip)||!validMask(m))return false;const{h,bc}=hostPart(ip,m);return h!==0&&h!==bc};
+const INET={'8.8.8.8':{n:'dns.google',dns:1},'1.1.1.1':{n:'one.one.one.one',dns:1},'142.250.185.78':{n:'google.com'},'142.250.185.110':{n:'youtube.com'},'91.212.89.10':{n:'cyber.uz'}};
+const NAMES={'google.com':'142.250.185.78','www.google.com':'142.250.185.78','youtube.com':'142.250.185.110','www.youtube.com':'142.250.185.110','cyber.uz':'91.212.89.10','www.cyber.uz':'91.212.89.10','dns.google':'8.8.8.8'};
+const ISPGW='84.54.70.1';
+
+/* ===================== model ===================== */
+const HOSTS=['pc','laptop','server','printer'],BRIDGE=['switch','ap','modem'];
+const TYPES={pc:{nm:'PC',lab:['Kompyuter','PC']},laptop:{nm:'Laptop',lab:['Noutbuk','Laptop']},server:{nm:'Server',lab:['Server','Server']},printer:{nm:'Printer',lab:['Printer','Printer']},switch:{nm:'Switch',lab:['Switch','Switch']},router:{nm:'Router',lab:['Router','Router']},ap:{nm:'AP',lab:['Access Point','Access Point']},modem:{nm:'Modem',lab:['Modem (ONT)','Modem (ONT)']},isp:{nm:'Internet',lab:['Internet (ISP)','Internet (ISP)']}};
+const PORTS={pc:[['Fa0','eth']],laptop:[['Fa0','eth']],server:[['Fa0','eth']],printer:[['Fa0','eth']],switch:[1,2,3,4,5,6,7,8].map(i=>['Fa0/'+i,'eth']),router:[['G0/0','eth'],['G0/1','eth'],['WAN','eth']],ap:[['Eth0','eth']],modem:[['PON','fiber'],['LAN1','eth'],['LAN2','eth']],isp:[['F1','fiber'],['F2','fiber']]};
+const CABLES={straight:{c:'#4c8dff',d:'0',lab:['Straight (to‘g‘ri) UTP','Straight-through UTP']},cross:{c:'#a98bff',d:'9 5',lab:['Crossover (kesishgan) UTP','Crossover UTP']},fiber:{c:'#f28b3c',d:'0',lab:['Optik tola (fiber)','Fibre optic']},bad:{c:'#ff5f5f',d:'3 4',lab:['Noto‘g‘ri yasalgan kabel','Mis-wired cable']}};
+function newState(){return{devs:[],links:[],n:0,cnt:{},mdix:false,events:[]}}
+let ST=newState();
+function defCfg(t){
+ if(HOSTS.includes(t)){const c={mode:'static',ip:'',mask:'',gw:'',dns:'',released:false,fw:false};if(t==='laptop')c.wifi={ssid:'',pass:''};if(t==='server'){c.dnsOn=false;c.recs=[['portal.cyber.uz',''],['','']]}return c}
+ if(t==='router')return{ifs:{'G0/0':{ip:'',mask:''},'G0/1':{ip:'',mask:''}},wan:{mode:'dhcp',ip:'',mask:'',gw:''},dhcp:{'G0/0':{on:false,start:'',count:50,dns:''},'G0/1':{on:false,start:'',count:50,dns:''}},nat:true};
+ if(t==='ap')return{ssid:'',pass:''};
+ return{}}
+function merge(a,b){for(const k in b){if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object')merge(a[k],b[k]);else a[k]=b[k]}return a}
+function addDev(t,x,y,cfg,name){const id='d'+(++ST.n);ST.cnt[t]=(ST.cnt[t]||0)+1;const nm=name||(t==='isp'?'Internet'+(ST.cnt[t]>1?ST.cnt[t]:''):TYPES[t].nm+ST.cnt[t]);const d={id,type:t,name:nm,x,y,cfg:merge(defCfg(t),cfg?JSON.parse(JSON.stringify(cfg)):{})};ST.devs.push(d);return d}
+function addLink(a,pa,b,pb,cable){const l={id:'l'+(++ST.n),a:{d:a.id||a,p:pa},b:{d:b.id||b,p:pb},cable};ST.links.push(l);return l}
+const dev=id=>ST.devs.find(d=>d.id===id);
+const byName=n=>ST.devs.find(d=>d.name===n);
+const devsOf=t=>ST.devs.filter(d=>d.type===t);
+const portLink=(id,p)=>ST.links.find(l=>(l.a.d===id&&l.a.p===p)||(l.b.d===id&&l.b.p===p));
+const linksOf=id=>ST.links.filter(l=>l.a.d===id||l.b.d===id);
+const other=(l,id)=>l.a.d===id?l.b:l.a;
+const pkind=(t,p)=>(PORTS[t].find(x=>x[0]===p)||[])[1];
+const grp=t=>(t==='switch'||t==='modem')?'sw':'host';
+function needCable(A,pa,B,pb){if(pkind(A.type,pa)==='fiber')return'fiber';return grp(A.type)===grp(B.type)?'cross':'straight'}
+function linkUp(l){const A=dev(l.a.d),B=dev(l.b.d);if(!A||!B)return false;const ka=pkind(A.type,l.a.p),kb=pkind(B.type,l.b.p);if(ka!==kb)return false;if(ka==='fiber')return l.cable==='fiber';if(l.cable==='fiber'||l.cable==='bad')return false;return ST.mdix||l.cable===needCable(A,l.a.p,B,l.b.p)}
+function linkReason(l){const A=dev(l.a.d),B=dev(l.b.d);if(linkUp(l))return L('Ishlayapti ✓','Up ✓');if(l.cable==='bad'&&l.wires)return cableVerdict(l.wires.a,l.wires.b).h;const need=needCable(A,l.a.p,B,l.b.p);
+ return L(`Ishlamayapti: ${A.name} ↔ ${B.name} uchun <b>${LL(CABLES[need].lab)}</b> kerak. ${need==='straight'?'Turli guruh qurilmalari (PC/router ↔ switch) — Straight.':need==='cross'?'Bir xil guruh qurilmalari (PC↔PC, switch↔switch, PC↔router) — Crossover.':''}`,`Down: ${A.name} ↔ ${B.name} needs <b>${LL(CABLES[need].lab)}</b>.`)}
+
+/* ===================== network engine ===================== */
+let NET=null;
+function macOf(id,s=0){const n=parseInt(id.slice(1))*7+s;const h=x=>(x&255).toString(16).padStart(2,'0');return['00','1a','2b',h(n*13),h(n*29+7),h(n*53+s)].join('-')}
+function compute(){
+ const N={up:{},assoc:{},wifiSt:{},rIf:{},hIf:{},members:{},isps:[]};
+ const P={};const f=k=>{if(P[k]===undefined)P[k]=k;while(P[k]!==k){P[k]=P[P[k]];k=P[k]}return k};const u=(a,b)=>{P[f(a)]=f(b)};
+ const key=(d,p)=>(BRIDGE.includes(d.type)||d.type==='isp')?d.id:(HOSTS.includes(d.type)?d.id+':eth':d.id+':'+p);
+ ST.links.forEach(l=>{const ok=linkUp(l);N.up[l.id]=ok;if(ok)u(key(dev(l.a.d),l.a.p),key(dev(l.b.d),l.b.p))});
+ devsOf('laptop').forEach(d=>{const w=d.cfg.wifi;let st='none';if(w.ssid){const ap=devsOf('ap').find(a=>a.cfg.ssid&&a.cfg.ssid===w.ssid);if(!ap)st='nossid';else if((ap.cfg.pass||'').length<8)st='apweak';else if(w.pass!==ap.cfg.pass)st='badpass';else{st='ok';u(d.id+':wlan',ap.id);N.assoc[d.id]=ap.id}}N.wifiSt[d.id]=st});
+ devsOf('isp').forEach(i=>N.isps.push({dev:i.id,seg:f(i.id)}));
+ // routers
+ devsOf('router').forEach(R=>{const o={};['G0/0','G0/1'].forEach(p=>{const c=R.cfg.ifs[p];const lk=portLink(R.id,p);const up=!!(lk&&N.up[lk.id]);o[p]={port:p,up,seg:up?f(R.id+':'+p):null,ip:usable(c.ip,c.mask)?c.ip:'',mask:usable(c.ip,c.mask)?c.mask:''}});
+  const w=R.cfg.wan;const lk=portLink(R.id,'WAN');const up=!!(lk&&N.up[lk.id]);o.WAN={port:'WAN',up,seg:up?f(R.id+':WAN'):null,ip:'',mask:'',gw:'',dns:'',src:w.mode};
+  if(up&&w.mode==='static'&&usable(w.ip,w.mask)){o.WAN.ip=w.ip;o.WAN.mask=w.mask;o.WAN.gw=validIP(w.gw)?w.gw:'';o.WAN.dns='8.8.8.8'}
+  N.rIf[R.id]=o});
+ // hosts
+ HOSTS.forEach(t=>devsOf(t).forEach(d=>{const c=d.cfg;const ethUp=linksOf(d.id).some(l=>N.up[l.id]);let seg=null,ad='eth';
+  if(ethUp)seg=f(d.id+':eth');else if(N.assoc[d.id]){seg=f(d.id+':wlan');ad='wifi'}
+  const hi={dev:d.id,media:!!seg,seg,ad,ip:'',mask:'',gw:'',dns:'',src:'none',srv:''};
+  if(seg&&c.mode==='static'){if(usable(c.ip,c.mask)){hi.ip=c.ip;hi.mask=c.mask;hi.src='static'}hi.gw=validIP(c.gw)?c.gw:'';hi.dns=validIP(c.dns)?c.dns:''}
+  else if(seg&&c.mode==='dhcp'&&!c.released)hi.src='wait';
+  N.hIf[d.id]=hi}));
+ // dhcp servers
+ const srv={};
+ devsOf('router').forEach(R=>['G0/0','G0/1'].forEach(p=>{const fI=N.rIf[R.id][p];const pool=R.cfg.dhcp[p];if(fI.seg&&fI.ip&&pool.on&&validIP(pool.start)&&sameNet(pool.start,fI.ip,fI.mask)&&!srv[fI.seg])srv[fI.seg]={start:pool.start,count:Math.max(1,+pool.count||1),mask:fI.mask,gw:fI.ip,dns:validIP(pool.dns)?pool.dns:fI.ip,sip:fI.ip}}));
+ N.isps.forEach(i=>{if(!srv[i.seg])srv[i.seg]={start:'84.54.70.20',count:200,mask:'255.255.255.0',gw:ISPGW,dns:'8.8.8.8',sip:ISPGW}});
+ const cl={};const num=id=>parseInt(id.slice(1));
+ Object.values(N.hIf).filter(h=>h.src==='wait').forEach(h=>(cl[h.seg]=cl[h.seg]||[]).push({k:'h',id:h.dev}));
+ devsOf('router').forEach(R=>{const w=N.rIf[R.id].WAN;if(w.up&&w.src==='dhcp')(cl[w.seg]=cl[w.seg]||[]).push({k:'r',id:R.id})});
+ Object.entries(cl).forEach(([seg,list])=>{list.sort((a,b)=>num(a.id)-num(b.id));const s=srv[seg];
+  list.forEach((c,k)=>{let lease=null;if(s&&k<s.count){let ip=n2ip((ip2n(s.start)+k)>>>0);if(sameNet(ip,s.gw,s.mask)&&usable(ip,s.mask))lease={ip,mask:s.mask,gw:s.gw,dns:s.dns,srv:s.sip}}
+   if(c.k==='h'){const h=N.hIf[c.id];if(lease){Object.assign(h,lease);h.src='dhcp'}else{const n=num(c.id);h.ip=`169.254.${(n*37)%250+1}.${(n*91)%250+2}`;h.mask='255.255.0.0';h.src='apipa'}}
+   else if(lease){Object.assign(N.rIf[c.id].WAN,{ip:lease.ip,mask:lease.mask,gw:lease.gw,dns:lease.dns})}})});
+ // members
+ const add=(seg,m)=>{if(seg)(N.members[seg]=N.members[seg]||[]).push(Object.assign({seg},m))};
+ Object.values(N.hIf).forEach(h=>{if(h.ip)add(h.seg,{kind:'host',dev:h.dev,ip:h.ip,mask:h.mask})});
+ Object.entries(N.rIf).forEach(([id,o])=>Object.values(o).forEach(fI=>{if(fI.ip)add(fI.seg,{kind:'router',dev:id,port:fI.port,ip:fI.ip,mask:fI.mask})}));
+ N.isps.forEach(i=>add(i.seg,{kind:'isp',dev:i.dev,ip:ISPGW,mask:'255.255.255.0'}));
+ Object.values(N.members).forEach(ms=>{const c={};ms.forEach(m=>c[m.ip]=(c[m.ip]||0)+1);ms.forEach(m=>{if(c[m.ip]>1){m.dup=true;if(m.kind==='host')N.hIf[m.dev].dup=true}})});
+ return N}
+const findIn=(seg,ip)=>seg&&NET.members[seg]?NET.members[seg].find(m=>m.ip===ip):null;
+function l2path(a,b){if(a===b)return[a];const adj={};const e=(x,y)=>{(adj[x]=adj[x]||[]).push(y);(adj[y]=adj[y]||[]).push(x)};
+ ST.links.forEach(l=>{if(NET.up[l.id])e(l.a.d,l.b.d)});Object.entries(NET.assoc).forEach(([x,y])=>e(x,y));
+ const prev={[a]:null},q=[a];while(q.length){const x=q.shift();if(x===b)break;(adj[x]||[]).forEach(y=>{if(prev[y]!==undefined)return;if(y!==b&&!BRIDGE.includes(dev(y).type))return;prev[y]=x;q.push(y)})}
+ if(prev[b]===undefined)return[a,b];const p=[];let x=b;while(x!=null){p.unshift(x);x=prev[x]}return p}
+function fromHost(H,dst){const hi=NET.hIf[H.id];const r={ok:false,path:[H.id],hops:[],err:'',src:hi?hi.ip:''};
+ if(!hi||!hi.media){r.err='general';return r}
+ if(/^127\./.test(dst)||(hi.ip&&dst===hi.ip)){r.ok=true;r.self=true;return r}
+ if(!hi.ip){r.err='general';return r}
+ if(hi.dup){r.err='timeout';return r}
+ if(sameNet(hi.ip,dst,hi.mask)){const t=findIn(hi.seg,dst);if(!t){r.err='unreach';return r}if(t.dup){r.err='timeout';return r}r.path=l2path(H.id,t.dev);r.target=t;r.hops.push(dst);r.ok=true;return r}
+ if(!hi.gw||!sameNet(hi.ip,hi.gw,hi.mask)){r.err='general';return r}
+ const g=findIn(hi.seg,hi.gw);if(!g||g.dup||(g.kind!=='router'&&g.kind!=='isp')){r.err='timeout';return r}
+ r.path=l2path(H.id,g.dev);r.hops.push(hi.gw);return viaR(g,dst,hi.ip,r,0)}
+function viaR(g,dst,src,r,depth){const R=dev(g.dev);if(depth>8){r.err='timeout';return r}
+ if(R.type==='isp'){if(INET[dst]){r.ok=true;r.target={kind:'inet',ip:dst};r.hops.push('*core*',dst);return r}
+  const t=findIn(g.seg,dst);if(t&&!t.dup){r.path=r.path.concat(l2path(R.id,t.dev).slice(1));r.target=t;r.hops.push(dst);r.ok=true;return r}r.err='timeout';return r}
+ const ifs=NET.rIf[R.id];
+ if(Object.values(ifs).some(x=>x.ip===dst)){r.ok=true;r.target={kind:'router',dev:R.id,ip:dst};if(r.hops[r.hops.length-1]!==dst)r.hops.push(dst);return r}
+ for(const x of Object.values(ifs)){if(x.ip&&x.seg&&sameNet(x.ip,dst,x.mask)){const t=findIn(x.seg,dst);if(!t||t.dup){r.err='timeout';return r}r.path=r.path.concat(l2path(R.id,t.dev).slice(1));r.target=t;r.hops.push(dst);r.ok=true;return r}}
+ const w=ifs.WAN;if(!w||!w.ip||!w.gw){r.err='netunreach';r.errFrom=g.ip;return r}
+ const n=findIn(w.seg,w.gw);if(!n||n.dup){r.err='timeout';return r}
+ r.path=r.path.concat(l2path(R.id,n.dev).slice(1));
+ if(isPriv(src)&&!R.cfg.nat){r.err='timeout';r.nat=true;return r}
+ r.hops.push(w.gw);return viaR(n,dst,src,r,depth+1)}
+function ping(H,dst,ignoreFw){const r=fromHost(H,dst);if(!r.ok||r.self)return r;const t=r.target;
+ if(t.kind==='host'){const T=dev(t.dev);if(T.cfg.fw&&!ignoreFw){r.ok=false;r.err='timeout';r.fw=true;return r}const back=fromHost(T,r.src);if(!back.ok){r.ok=false;r.err='timeout';r.noreturn=true}}
+ return r}
+function routerNet(R){const w=NET.rIf[R.id].WAN;if(!w.ip||!w.gw)return false;const g=findIn(w.seg,w.gw);return!!(g&&g.kind==='isp')}
+function resolve(H,name){name=name.toLowerCase();if(validIP(name)||/^127\./.test(name))return{ip:name};if(name==='localhost')return{ip:'127.0.0.1'};
+ const hi=NET.hIf[H.id];if(!hi||!hi.ip||!hi.dns)return{err:'nodns'};
+ const p=ping(H,hi.dns,true);if(!p.ok)return{err:'dnstimeout',dns:hi.dns};const t=p.target;
+ if(p.self)return{err:'dnstimeout',dns:hi.dns};
+ if(t.kind==='inet'){if(INET[hi.dns].dns)return NAMES[name]?{ip:NAMES[name],dns:hi.dns,srv:INET[hi.dns].n}:{err:'nx',dns:hi.dns,srv:INET[hi.dns].n};return{err:'dnstimeout',dns:hi.dns}}
+ if(t.kind==='host'){const Sv=dev(t.dev);if(Sv.type==='server'&&Sv.cfg.dnsOn){const rec=Sv.cfg.recs.find(x=>x[0]&&x[0].toLowerCase()===name);if(rec)return{ip:validIP(rec[1])?rec[1]:NET.hIf[Sv.id].ip,dns:hi.dns,srv:Sv.name};return{err:'nx',dns:hi.dns,srv:Sv.name}}return{err:'dnstimeout',dns:hi.dns}}
+ if(t.kind==='router'){if(routerNet(dev(t.dev)))return NAMES[name]?{ip:NAMES[name],dns:hi.dns,srv:dev(t.dev).name}:{err:'nx',dns:hi.dns,srv:dev(t.dev).name};return{err:'dnstimeout',dns:hi.dns}}
+ return{err:'dnstimeout',dns:hi.dns}}
+
+/* ===================== mode / missions ===================== */
+let MODE='lab',CUR={lab:0,trouble:0},STATES={},TOOL='move',CABLE='straight',SEL=null,TAB='task',PEND=null,STARTED=Date.now(),HINTS=0,TRBUSY=false;
+let RES={name:'',labs:{},tr:{}};try{RES=Object.assign(RES,JSON.parse(localStorage.getItem('netlab-res')||'{}'))}catch(e){}
+const saveRes=()=>{try{localStorage.setItem('netlab-res',JSON.stringify(RES))}catch(e){}};
+const evOk=pred=>ST.events.some(e=>e.ok&&pred(e)&&recheck(e));
+function recheck(e){const H=dev(e.from);if(!H)return false;let ip=e.dst;if(e.name){const r=resolve(H,e.name);if(!r.ip)return false;ip=r.ip}return ping(H,ip).ok}
+const hi=d=>d&&NET.hIf[d.id];
+const attachedTo=(sw)=>linksOf(sw.id).filter(l=>NET.up[l.id]).map(l=>dev(other(l,sw.id).d)).filter(d=>HOSTS.includes(d.type));
+const hostIP=d=>{const h=hi(d);return h&&h.ip&&h.src!=='apipa'&&!h.dup?h.ip:''};
+
+/* office network used by several presets */
+function office(o={}){ST=newState();
+ const isp=addDev('isp',90,95,null,'Internet'),mo=addDev('modem',250,95,null,'Modem1');
+ const R=addDev('router',440,95,{ifs:{'G0/0':{ip:'192.168.1.1',mask:'255.255.255.0'}},dhcp:{'G0/0':{on:true,start:'192.168.1.100',count:50,dns:''}}},'Router1');
+ const sw=addDev('switch',440,270,null,'Switch1');
+ const p1=addDev('pc',220,440,{mode:'dhcp'},'PC1'),p2=addDev('pc',400,470,{mode:'dhcp'},'PC2');
+ const sv=addDev('server',590,450,{mode:'static',ip:'192.168.1.10',mask:'255.255.255.0',gw:'192.168.1.1',dns:'8.8.8.8',dnsOn:true,recs:[['portal.cyber.uz',''],['','']]},'Server1');
+ const ap=addDev('ap',720,270,{ssid:'CyberUni',pass:'Cyber2026'},'AP1');
+ const lp=addDev('laptop',860,420,{mode:'dhcp',wifi:{ssid:'CyberUni',pass:'Cyber2026'}},'Laptop1');
+ if(!o.noFiber)addLink(isp,'F1',mo,'PON','fiber');addLink(mo,'LAN1',R,'WAN','straight');addLink(R,'G0/0',sw,'Fa0/1','straight');
+ addLink(sw,'Fa0/2',p1,'Fa0','straight');addLink(sw,'Fa0/3',p2,'Fa0',o.crossPC2?'cross':'straight');addLink(sw,'Fa0/4',sv,'Fa0','straight');addLink(sw,'Fa0/5',ap,'Eth0','straight');
+ return{isp,mo,R,sw,p1,p2,sv,ap,lp}}
+
+const LABS=[
+ {id:'M0',t:['RJ-45 kabel yasash','Making RJ-45 cables'],
+  d:['Tarmoq kabelini o‘zimiz yasaymiz: 8 ta simni T568A/T568B standarti bo‘yicha joylab, konnektorni siqamiz va kabel tester bilan tekshiramiz. Keyin yasagan kabellarimiz bilan qurilmalarni ulaymiz.','We make network cables ourselves: lay the 8 wires in T568A/T568B order, crimp the plug and check it with a cable tester. Then we connect devices with our own cables.'],
+  preset(){ST=newState();addDev('switch',380,170,null,'Switch1');addDev('pc',180,420,{ip:'192.168.5.10',mask:'255.255.255.0'},'PC1');addDev('pc',640,420,{ip:'192.168.5.11',mask:'255.255.255.0'},'PC2');addDev('pc',860,420,{ip:'192.168.5.12',mask:'255.255.255.0'},'PC3')},
+  steps:[[['🔧 <b>Kabel yasash</b> tugmasini bosing. Ikkala uchini <b>T568B</b> bo‘yicha yig‘ib, <b>Straight</b> kabel yasang va testerdan o‘tkazing.','Press 🔧 <b>Make a cable</b>. Wire both ends <b>T568B</b> to make a <b>straight</b> cable and test it.'],()=>INV.some(c=>c.type==='straight')],
+   [['Bir uchi <b>T568A</b>, ikkinchisi <b>T568B</b> bo‘lgan <b>Crossover</b> kabel yasang.','Make a <b>crossover</b> cable: one end <b>T568A</b>, the other <b>T568B</b>.'],()=>INV.some(c=>c.type==='cross')],
+   [['O‘zingiz yasagan <b>straight</b> kabel bilan PC1 ni Switch1 ga ulang (Kabel asbobida 🛠 kabelingizni tanlang).','Connect PC1 to Switch1 with your own <b>straight</b> cable (pick your 🛠 cable in the Cable tool).'],()=>ST.links.some(l=>l.wires&&l.cable==='straight'&&NET.up[l.id])],
+   [['O‘zingiz yasagan <b>crossover</b> kabel bilan PC2 va PC3 ni to‘g‘ridan-to‘g‘ri ulang.','Connect PC2 and PC3 directly with your own <b>crossover</b> cable.'],()=>ST.links.some(l=>l.wires&&l.cable==='cross'&&NET.up[l.id])],
+   [['PC2 dan PC3 ga <code>ping 192.168.5.12</code> qiling.','From PC2 run <code>ping 192.168.5.12</code>.'],()=>evOk(e=>e.kind==='ping'&&e.tdev&&HOSTS.includes(dev(e.tdev).type)&&e.tdev!==e.from)],
+   [['⭐ Bitta kabelni jadvalga qaramasdan to‘g‘ri yasang.','⭐ Make one cable correctly without looking at the chart.'],()=>INV.some(c=>c.type!=='bad'&&!c.ref),'opt']],
+  hints:[['T568B: oq-to‘q sariq, to‘q sariq, oq-yashil, ko‘k, oq-ko‘k, yashil, oq-jigarrang, jigarrang.','T568B: white-orange, orange, white-green, blue, white-blue, green, white-brown, brown.'],['T568A: oq-yashil, yashil, oq-to‘q sariq, ko‘k, oq-ko‘k, to‘q sariq, oq-jigarrang, jigarrang.','T568A: white-green, green, white-orange, blue, white-blue, orange, white-brown, brown.'],['Straight = ikki uch bir xil (B–B). Crossover = A–B.','Straight = both ends the same (B–B). Crossover = A–B.']]},
+ {id:'M1',t:['Ikki kompyuterni to‘g‘ridan-to‘g‘ri ulash','Connect two PCs directly'],
+  d:['Eng oddiy tarmoq — ikki kompyuter bitta kabel bilan. Bir xil turdagi qurilmalar ulanganda qaysi kabel kerakligini va statik IP berishni o‘rganamiz.','The simplest network: two PCs and one cable. Learn which cable joins like devices and how to set a static IP.'],
+  preset(){ST=newState()},
+  steps:[[['Chap paneldan 2 ta <b>Kompyuter</b> qo‘shing.','Add 2 <b>PCs</b> from the left panel.'],()=>devsOf('pc').length>=2],
+   [['<b>Kabel</b> asbobini tanlang va ikki PC’ni ulang — chiziq qizil bo‘lmasin (to‘g‘ri kabel turini tanlang).','Pick the <b>Cable</b> tool and connect the PCs — the line must not be red (pick the right cable).'],()=>ST.links.some(l=>NET.up[l.id]&&HOSTS.includes(dev(l.a.d).type)&&HOSTS.includes(dev(l.b.d).type))],
+   [['Ikkala PC’ga bir tarmoqdan statik IP bering: masalan <code>192.168.1.10</code> va <code>192.168.1.11</code>, mask <code>255.255.255.0</code>.','Give both PCs static IPs in one network, e.g. <code>192.168.1.10</code> and <code>192.168.1.11</code>, mask <code>255.255.255.0</code>.'],()=>ST.links.some(l=>{if(!NET.up[l.id])return false;const A=dev(l.a.d),B=dev(l.b.d);if(!HOSTS.includes(A.type)||!HOSTS.includes(B.type))return false;const a=hi(A),b=hi(B);return a.src==='static'&&b.src==='static'&&!a.dup&&!b.dup&&sameNet(a.ip,b.ip,a.mask)})],
+   [['PC’ni tanlab, <b>Terminal</b>da ikkinchi PC’ga <code>ping</code> qiling.','Select a PC and <code>ping</code> the other one in the <b>Terminal</b>.'],()=>evOk(e=>e.kind==='ping'&&e.tdev&&HOSTS.includes(dev(e.tdev).type)&&e.tdev!==e.from)]],
+  hints:[['Ikki PC — bir xil guruh qurilmalari. Ular uchun <b>Crossover</b> kabel kerak.','Two PCs are the same group — they need a <b>Crossover</b> cable.'],['IP berish: PC’ni bosing → Sozlash → Statik → IP va Mask.','Set an IP: click the PC → Settings → Static → IP and Mask.'],['Terminalda: <code>ping 192.168.1.11</code>','In the terminal: <code>ping 192.168.1.11</code>']]},
+ {id:'M2',t:['Switch bilan kichik LAN','A small LAN with a switch'],
+  d:['Ofisdagi kabi: bir nechta qurilma bitta switchga ulanadi (Star topologiya).','Like an office: several devices plug into one switch (star topology).'],
+  preset(){ST=newState()},
+  steps:[[['<b>Switch</b> qo‘shing.','Add a <b>Switch</b>.'],()=>devsOf('switch').length>0],
+   [['Kamida 3 ta qurilmani (PC, server yoki printer) switchga ishlaydigan kabel bilan ulang.','Connect at least 3 devices (PC, server or printer) to the switch with working cables.'],()=>devsOf('switch').some(s=>attachedTo(s).length>=3)],
+   [['Ularning barchasiga <code>192.168.10.0/24</code> tarmog‘idan takrorlanmas IP bering.','Give all of them unique IPs from <code>192.168.10.0/24</code>.'],()=>devsOf('switch').some(s=>{const h=attachedTo(s);return h.length>=3&&h.every(d=>{const x=hi(d);return x.ip&&x.src!=='apipa'&&!x.dup&&sameNet(x.ip,'192.168.10.1','255.255.255.0')})})],
+   [['Bir qurilmadan boshqasiga <code>ping</code> qiling.','<code>ping</code> one device from another.'],()=>evOk(e=>e.kind==='ping'&&e.tdev&&HOSTS.includes(dev(e.tdev).type)&&e.tdev!==e.from)],
+   [['<code>arp -a</code> buyrug‘i bilan qo‘shnilarning MAC manzillarini ko‘ring.','Run <code>arp -a</code> to see the neighbours’ MAC addresses.'],()=>ST.events.some(e=>e.kind==='arp'&&e.n>0)]],
+  hints:[['PC va switch turli guruh — <b>Straight</b> kabel.','PC and switch are different groups — <b>Straight</b> cable.'],['Mask 255.255.255.0: IP’lar 192.168.10.1 dan 192.168.10.254 gacha.','Mask 255.255.255.0: IPs from 192.168.10.1 to 192.168.10.254.']]},
+ {id:'M3',t:['Router va DHCP','Router and DHCP'],
+  d:['Har bir kompyuterga IP’ni qo‘lda yozish qiyin. Router DHCP xizmati orqali IP manzillarni avtomatik tarqatadi.','Typing IPs by hand is slow. The router hands them out automatically with DHCP.'],
+  preset(){ST=newState();const sw=addDev('switch',480,300,null,'Switch1');const p1=addDev('pc',300,480,{mode:'dhcp'},'PC1'),p2=addDev('pc',480,500,{mode:'dhcp'},'PC2'),p3=addDev('laptop',660,480,{mode:'dhcp'},'Laptop1');addLink(sw,'Fa0/2',p1,'Fa0','straight');addLink(sw,'Fa0/3',p2,'Fa0','straight');addLink(sw,'Fa0/4',p3,'Fa0','straight');addDev('router',480,110,null,'Router1')},
+  steps:[[['Router’ning <b>G0/0</b> portini switchga ulang.','Connect the router’s <b>G0/0</b> port to the switch.'],()=>devsOf('router').some(R=>NET.rIf[R.id]['G0/0'].up)],
+   [['Router → Sozlash: G0/0 ga <code>192.168.1.1</code> / <code>255.255.255.0</code> bering — bu default gateway bo‘ladi.','Router → Settings: give G0/0 <code>192.168.1.1</code> / <code>255.255.255.0</code> — this is the default gateway.'],()=>devsOf('router').some(R=>NET.rIf[R.id]['G0/0'].ip)],
+   [['G0/0 uchun <b>DHCP</b>ni yoqing, boshlang‘ich manzil: <code>192.168.1.100</code>.','Turn on <b>DHCP</b> for G0/0, start address <code>192.168.1.100</code>.'],()=>Object.values(NET.hIf).some(h=>h.src==='dhcp')||devsOf('router').some(R=>R.cfg.dhcp['G0/0'].on&&validIP(R.cfg.dhcp['G0/0'].start))],
+   [['Kompyuterlar avtomatik IP olsin: PC terminalida <code>ipconfig /renew</code>, keyin <code>ipconfig</code>.','Let the PCs get an IP: run <code>ipconfig /renew</code>, then <code>ipconfig</code>.'],()=>Object.values(NET.hIf).filter(h=>h.src==='dhcp').length>=3&&ST.events.some(e=>e.kind==='ipconfig')],
+   [['PC’dan default gateway’ga <code>ping</code> qiling.','<code>ping</code> the default gateway from a PC.'],()=>evOk(e=>e.kind==='ping'&&e.tdev&&dev(e.tdev).type==='router')]],
+  hints:[['Router va switch turli guruh — <b>Straight</b>. Port menyusidan <b>G0/0</b> ni tanlang.','Router and switch are different groups — <b>Straight</b>. Choose <b>G0/0</b> in the port menu.'],['DHCP boshlang‘ich manzili gateway bilan bir tarmoqda bo‘lishi shart.','The DHCP start address must be in the same network as the gateway.'],['Agar <code>169.254.x.x</code> chiqsa — DHCP hali ishlamayapti.','<code>169.254.x.x</code> means DHCP is not working yet.']]},
+ {id:'M4',t:['Internetga chiqish','Getting on the Internet'],
+  d:['LAN tayyor. Endi provayderdan kelgan optik kabelni modemga, modemni router’ning WAN portiga ulaymiz. Router NAT orqali hamma kompyuterni bitta public IP bilan Internetga chiqaradi.','The LAN is ready. Connect the ISP fibre to the modem and the modem to the router’s WAN port. The router uses NAT to share one public IP.'],
+  preset(){const o=office({noFiber:true});ST.links=ST.links.filter(l=>!(l.a.d===o.mo.id||l.b.d===o.mo.id)&&!(l.a.d===o.ap.id||l.b.d===o.ap.id));ST.devs=ST.devs.filter(d=>d!==o.ap&&d!==o.lp&&d!==o.sv);o.mo.x=250;o.mo.y=250;o.isp.y=250},
+  steps:[[['<b>Optik tola</b> bilan Internet (ISP) ni modemning <b>PON</b> portiga ulang.','Connect the ISP to the modem’s <b>PON</b> port with <b>fibre</b>.'],()=>ST.links.some(l=>NET.up[l.id]&&l.cable==='fiber')],
+   [['Modemning <b>LAN1</b> portini router’ning <b>WAN</b> portiga ulang.','Connect modem <b>LAN1</b> to the router’s <b>WAN</b> port.'],()=>devsOf('router').some(R=>NET.rIf[R.id].WAN.up)],
+   [['Router WAN portiga provayderdan IP kelganini tekshiring (Router → Sozlash).','Check that the router WAN got an IP from the ISP (Router → Settings).'],()=>devsOf('router').some(R=>NET.rIf[R.id].WAN.ip)],
+   [['PC’dan <code>ping 8.8.8.8</code> — Internetga IP bo‘yicha chiqish.','From a PC: <code>ping 8.8.8.8</code> — the Internet by IP.'],()=>evOk(e=>e.kind==='ping'&&e.inet&&!e.name)],
+   [['<code>ping google.com</code> — DNS ham ishlayotganini tekshiring.','<code>ping google.com</code> — check that DNS works too.'],()=>evOk(e=>e.kind==='ping'&&e.inet&&e.name)],
+   [['<code>tracert google.com</code> — paket qaysi routerlardan o‘tishini ko‘ring.','<code>tracert google.com</code> — see which routers the packet crosses.'],()=>evOk(e=>e.kind==='tracert'&&e.inet)]],
+  hints:[['Kabel asbobida <b>Optik tola</b>ni tanlang — u faqat PON/fiber portlarga ulanadi.','Choose <b>Fibre</b> in the cable tool — it only fits PON/fibre ports.'],['Modem LAN porti switchga o‘xshaydi, router esa “host” guruhida → <b>Straight</b>.','A modem LAN port acts like a switch, the router is a host → <b>Straight</b>.'],['Modemdagi chiroq qizil “LOS” bo‘lsa — optik signal yo‘q.','A red “LOS” light on the modem means no fibre signal.']]},
+ {id:'M5',t:['Wi-Fi tarmog‘i','Wi-Fi network'],
+  d:['Noutbuklar uchun simsiz tarmoq quramiz: access point switchga ulanadi, SSID va WPA2 paroli beriladi, noutbuk shu tarmoqqa ulanadi.','Build Wi-Fi for laptops: the AP plugs into the switch, gets an SSID and WPA2 password, the laptop joins it.'],
+  preset(){const o=office();ST.links=ST.links.filter(l=>!(l.a.d===o.ap.id||l.b.d===o.ap.id));o.ap.cfg={ssid:'',pass:''};o.lp.cfg.wifi={ssid:'',pass:''}},
+  steps:[[['Access Point’ni switchga ulang.','Connect the access point to the switch.'],()=>devsOf('ap').some(a=>linksOf(a.id).some(l=>NET.up[l.id]))],
+   [['AP → Sozlash: <b>SSID</b> (masalan <code>CyberLab</code>) va kamida 8 belgili <b>parol</b> bering.','AP → Settings: set an <b>SSID</b> (e.g. <code>CyberLab</code>) and a <b>password</b> of at least 8 characters.'],()=>devsOf('ap').some(a=>a.cfg.ssid&&a.cfg.pass.length>=8)],
+   [['Laptop1 → Sozlash → Wi-Fi: tarmoqni tanlang va parolni kiriting.','Laptop1 → Settings → Wi-Fi: choose the network and enter the password.'],()=>Object.keys(NET.assoc).length>0],
+   [['Noutbuk DHCP orqali IP olsin (<code>ipconfig</code>).','The laptop gets an IP by DHCP (<code>ipconfig</code>).'],()=>devsOf('laptop').some(d=>hi(d).src==='dhcp'&&hi(d).ad==='wifi')],
+   [['Noutbukdan <code>ping google.com</code>.','From the laptop: <code>ping google.com</code>.'],()=>evOk(e=>e.kind==='ping'&&e.inet&&e.name&&dev(e.from).type==='laptop')]],
+  hints:[['AP — host guruhida, switch bilan <b>Straight</b>.','The AP is a host — <b>Straight</b> to the switch.'],['WPA2 paroli kamida 8 belgi bo‘lishi kerak, katta-kichik harf farq qiladi.','A WPA2 password needs 8+ characters and is case-sensitive.']]},
+ {id:'M6',t:['Ikki subnetni router orqali bog‘lash','Routing between two subnets'],
+  d:['Ikki bo‘lim — buxgalteriya va IT — alohida tarmoqda. Router ularni bog‘laydi: har bir interfeys o‘z subnetining gateway’i bo‘ladi.','Two departments — accounting and IT — live in separate subnets. The router joins them: each interface is its subnet’s gateway.'],
+  preset(){ST=newState();addDev('router',500,100,null,'Router1');const s1=addDev('switch',260,280,null,'Switch1'),s2=addDev('switch',740,280,null,'Switch2');
+   const a=addDev('pc',160,470,null,'PC1'),b=addDev('pc',340,480,null,'PC2'),c=addDev('pc',660,480,null,'PC3'),d=addDev('pc',840,470,null,'PC4');
+   addLink(s1,'Fa0/2',a,'Fa0','straight');addLink(s1,'Fa0/3',b,'Fa0','straight');addLink(s2,'Fa0/2',c,'Fa0','straight');addLink(s2,'Fa0/3',d,'Fa0','straight')},
+  steps:[[['Router <b>G0/0</b> ni Switch1 ga, <b>G0/1</b> ni Switch2 ga ulang.','Connect router <b>G0/0</b> to Switch1 and <b>G0/1</b> to Switch2.'],()=>devsOf('router').some(R=>{const o=NET.rIf[R.id];return o['G0/0'].up&&o['G0/1'].up&&o['G0/0'].seg!==o['G0/1'].seg})],
+   [['Interfeyslarga turli subnet bering: G0/0 = <code>192.168.1.1/24</code>, G0/1 = <code>192.168.2.1/24</code>.','Give the interfaces different subnets: G0/0 = <code>192.168.1.1/24</code>, G0/1 = <code>192.168.2.1/24</code>.'],()=>devsOf('router').some(R=>{const o=NET.rIf[R.id],a=o['G0/0'],b=o['G0/1'];return a.ip&&b.ip&&!sameNet(a.ip,b.ip,a.mask)&&!sameNet(a.ip,b.ip,b.mask)})],
+   [['Har bir PC o‘z subnetidan IP va to‘g‘ri <b>default gateway</b> olsin (statik yoki DHCP).','Each PC needs an IP from its own subnet and the right <b>default gateway</b> (static or DHCP).'],()=>{const pcs=devsOf('pc');return pcs.length>=4&&pcs.every(p=>{const h=hi(p);if(!h.ip||h.src==='apipa'||h.dup||!h.gw)return false;const g=findIn(h.seg,h.gw);return g&&g.kind==='router'&&sameNet(h.ip,h.gw,h.mask)})}],
+   [['PC1 dan PC3 ga (boshqa subnet) <code>ping</code> qiling.','<code>ping</code> PC3 (other subnet) from PC1.'],()=>evOk(e=>e.kind==='ping'&&e.tdev&&HOSTS.includes(dev(e.tdev).type)&&hi(dev(e.tdev)).seg!==hi(dev(e.from)).seg)],
+   [['<code>tracert</code> bilan paket router orqali o‘tganini ko‘rsating.','Show with <code>tracert</code> that the packet goes through the router.'],()=>evOk(e=>e.kind==='tracert'&&e.tdev&&HOSTS.includes(dev(e.tdev).type)&&e.hops>=2)]],
+  hints:[['Gateway — PC bilan bir tarmoqdagi router interfeysi: chapdagilar uchun 192.168.1.1, o‘ngdagilar uchun 192.168.2.1.','The gateway is the router interface in the PC’s network: 192.168.1.1 on the left, 192.168.2.1 on the right.'],['Tezroq yo‘l: har ikki interfeysda DHCP’ni yoqing va PC’larni DHCP rejimiga o‘tkazing.','Shortcut: enable DHCP on both interfaces and switch the PCs to DHCP.']]}];
+
+const CAUSES={crimp:['Kabel uchida simlar tartibi noto‘g‘ri','Wrong wire order in the plug'],dhcp:['DHCP xizmati o‘chirilgan','DHCP is turned off'],gw:['Default gateway noto‘g‘ri','Wrong default gateway'],cable:['Kabel turi noto‘g‘ri','Wrong cable type'],dns:['DNS server noto‘g‘ri','Wrong DNS server'],mask:['Subnet mask noto‘g‘ri','Wrong subnet mask'],dup:['IP manzil takrorlangan (konflikt)','Duplicate IP address'],nat:['Router’da NAT o‘chirilgan','NAT is off on the router'],wifi:['Wi-Fi paroli noto‘g‘ri','Wrong Wi-Fi password'],fw:['Firewall ping (ICMP) ni bloklagan','Firewall blocks ping (ICMP)'],fiber:['Optik kabel uzilgan','Fibre cable unplugged']};
+const TRS=[
+ {id:'C1',c:'dhcp',t:['“Limited connectivity”','“Limited connectivity”'],tk:['PC1 foydalanuvchisi: “Ertalabdan internet yo‘q, ekranda sariq uchburchak.” Boshqa kompyuterlarda ham shunday.','PC1 user: “No internet since morning, there’s a yellow triangle.” Other PCs too.'],goal:['PC1 dan <code>ping google.com</code> ishlasin.','Make <code>ping google.com</code> work from PC1.'],
+  setup(){const o=office();o.R.cfg.dhcp['G0/0'].on=false},done:()=>evOk(e=>dev(e.from).name==='PC1'&&e.inet&&e.name),
+  hints:[['PC1 da <code>ipconfig</code> — manzil qaysi diapazonda?','Run <code>ipconfig</code> on PC1 — which range is the address in?'],['169.254.x.x — APIPA. IP’ni kim berishi kerak edi?','169.254.x.x is APIPA. Who should hand out IPs?'],['Router → Sozlash → DHCP bo‘limi. Keyin <code>ipconfig /renew</code>.','Router → Settings → DHCP. Then <code>ipconfig /renew</code>.']]},
+ {id:'C2',c:'gw',t:['Internet yo‘q, printer ishlaydi','No internet, printer works'],tk:['PC1: “Kecha IT’chi IP’ni qo‘lda yozib ketdi. Server bilan ishlayman, lekin internet yo‘q.”','PC1: “IT typed my IP by hand yesterday. The server works but there’s no internet.”'],goal:['PC1 dan Internetga (8.8.8.8) ping o‘tsin.','Make PC1 reach the Internet (ping 8.8.8.8).'],
+  setup(){const o=office();o.p1.cfg=merge(o.p1.cfg,{mode:'static',ip:'192.168.1.50',mask:'255.255.255.0',gw:'192.168.1.254',dns:'8.8.8.8'})},done:()=>evOk(e=>dev(e.from).name==='PC1'&&e.inet),
+  hints:[['<code>ping 192.168.1.10</code> ishlaydi, <code>ping 8.8.8.8</code> yo‘q. Tarmoqdan tashqariga kim olib chiqadi?','<code>ping 192.168.1.10</code> works, <code>ping 8.8.8.8</code> doesn’t. Who leads out of the network?'],['<code>ipconfig</code> dagi Default Gateway’ni router IP’si bilan solishtiring.','Compare the Default Gateway in <code>ipconfig</code> with the router’s IP.']]},
+ {id:'C3',c:'cable',t:['Yangi ulangan kompyuter','A freshly cabled PC'],tk:['PC2: “Kompyuterni yangi stolga ko‘chirishdi, endi tarmoq umuman yo‘q.”','PC2: “They moved my PC to a new desk, now there’s no network at all.”'],goal:['PC2 dan default gateway’ga (192.168.1.1) ping o‘tsin.','Make PC2 ping the gateway (192.168.1.1).'],
+  setup(){office({crossPC2:true})},done:()=>evOk(e=>dev(e.from).name==='PC2'&&e.dst==='192.168.1.1'),
+  hints:[['PC2 da <code>ipconfig</code>: “Media disconnected” — fizik daraja.','<code>ipconfig</code> on PC2: “Media disconnected” — physical layer.'],['Kanvasdagi kabelni bosib, uning turini ko‘ring.','Click the cable on the canvas to see its type.'],['O‘chirish asbobi bilan kabelni olib, <b>Straight</b> bilan qayta ulang.','Delete the cable and reconnect with <b>Straight</b>.']]},
+ {id:'C4',c:'dns',t:['Saytlar ochilmaydi','Websites won’t open'],tk:['PC1: “Telegram ishlayapti, lekin brauzerda hech qanday sayt ochilmayapti.”','PC1: “Telegram works, but no website opens in the browser.”'],goal:['PC1 dan <code>ping google.com</code> ishlasin.','Make <code>ping google.com</code> work from PC1.'],
+  setup(){const o=office();o.p1.cfg=merge(o.p1.cfg,{mode:'static',ip:'192.168.1.50',mask:'255.255.255.0',gw:'192.168.1.1',dns:'10.10.10.10'})},done:()=>evOk(e=>dev(e.from).name==='PC1'&&e.inet&&e.name),
+  hints:[['<code>ping 8.8.8.8</code> va <code>ping google.com</code> natijasini solishtiring.','Compare <code>ping 8.8.8.8</code> and <code>ping google.com</code>.'],['<code>nslookup google.com</code> — qaysi DNS server so‘ralyapti?','<code>nslookup google.com</code> — which DNS server is asked?']]},
+ {id:'C5',c:'mask',t:['“General failure”','“General failure”'],tk:['PC2: “Ping qilsam ‘General failure’ chiqyapti. IP’ni o‘zim yozgandim.”','PC2: “Ping says ‘General failure’. I typed the IP myself.”'],goal:['PC2 dan 8.8.8.8 ga ping o‘tsin.','Make PC2 ping 8.8.8.8.'],
+  setup(){const o=office();o.p2.cfg=merge(o.p2.cfg,{mode:'static',ip:'192.168.1.61',mask:'255.255.255.252',gw:'192.168.1.1',dns:'8.8.8.8'})},done:()=>evOk(e=>dev(e.from).name==='PC2'&&e.inet),
+  hints:[['Gateway PC bilan bir subnetda bo‘lishi shart. /30 maskada nechta manzil bor?','The gateway must be in the PC’s subnet. How many addresses does /30 have?'],['Ofis tarmog‘i 192.168.1.0/24 — mask 255.255.255.0.','The office network is 192.168.1.0/24 — mask 255.255.255.0.']]},
+ {id:'C6',c:'dup',t:['IP konflikti','IP conflict'],tk:['Bir vaqtning o‘zida ikki shikoyat: PC1 da internet yo‘q, PC2 dan esa serverga kirib bo‘lmayapti.','Two tickets at once: PC1 has no internet, and PC2 can’t reach the server.'],goal:['PC1 Internetga chiqsin va PC2 dan Server1 (192.168.1.10) ga ping o‘tsin.','PC1 reaches the Internet and PC2 can ping Server1 (192.168.1.10).'],
+  setup(){const o=office();o.p1.cfg=merge(o.p1.cfg,{mode:'static',ip:'192.168.1.10',mask:'255.255.255.0',gw:'192.168.1.1',dns:'8.8.8.8'})},done:()=>evOk(e=>dev(e.from).name==='PC1'&&e.inet)&&evOk(e=>dev(e.from).name==='PC2'&&e.tdev&&dev(e.tdev).name==='Server1'),
+  hints:[['PC1 da <code>ipconfig /all</code> — IP yonida nima yozilgan?','<code>ipconfig /all</code> on PC1 — what is written next to the IP?'],['Server1 va PC1 ning IP manzillarini solishtiring.','Compare the IPs of Server1 and PC1.']]},
+ {id:'C7',c:'nat',t:['Hech kimda Internet yo‘q','Nobody has internet'],tk:['Butun ofis: “Internet yo‘q!” Router’ga bir kishi kirib “nimadir o‘zgartirgan”.','Whole office: “No internet!” Someone “changed something” on the router.'],goal:['PC1 dan 8.8.8.8 ga ping o‘tsin.','Make PC1 ping 8.8.8.8.'],
+  setup(){const o=office();o.R.cfg.nat=false},done:()=>evOk(e=>dev(e.from).name==='PC1'&&e.inet),
+  hints:[['Gateway’ga ping bormi? WAN’da IP bormi? Demak router’gacha hammasi joyida.','Does the gateway ping? Does WAN have an IP? So everything up to the router is fine.'],['Private IP (192.168.x.x) Internetda yurmaydi. Uni public IP’ga kim almashtiradi?','A private IP (192.168.x.x) can’t travel the Internet. What swaps it for the public IP?']]},
+ {id:'C8',c:'wifi',t:['Noutbuk Wi-Fi’ga ulanmaydi','Laptop won’t join Wi-Fi'],tk:['Laptop1: “Wi-Fi ro‘yxatda bor, parolni yozaman — ulanmaydi.”','Laptop1: “I see the Wi-Fi and type the password — it won’t connect.”'],goal:['Laptop1 dan <code>ping google.com</code> ishlasin.','Make <code>ping google.com</code> work from Laptop1.'],
+  setup(){const o=office();o.lp.cfg.wifi.pass='cyber2026'},done:()=>evOk(e=>dev(e.from).name==='Laptop1'&&e.inet&&e.name),
+  hints:[['Laptop1 → Sozlash → Wi-Fi holatini o‘qing.','Read the Wi-Fi status in Laptop1 → Settings.'],['Parol katta-kichik harfni farqlaydi. AP’dagi parolni ko‘ring.','Passwords are case-sensitive. Check the AP’s password.']]},
+ {id:'C9',c:'fw',t:['Serverga ping o‘tmaydi','Server doesn’t answer ping'],tk:['PC1: “Monitoring tizimi Server1 o‘chib qolgan deyapti, lekin server ishlayapti.”','PC1: “Monitoring says Server1 is down, but the server is running.”'],goal:['PC1 dan Server1 (192.168.1.10) ga ping o‘tsin.','Make PC1 ping Server1 (192.168.1.10).'],
+  setup(){const o=office();o.sv.cfg.fw=true},done:()=>evOk(e=>dev(e.from).name==='PC1'&&e.tdev&&dev(e.tdev).name==='Server1'),
+  hints:[['<code>ping 192.168.1.10</code> dan keyin <code>arp -a</code> — server MAC manzili ko‘rinyaptimi?','After <code>ping 192.168.1.10</code> run <code>arp -a</code> — is the server’s MAC there?'],['MAC bor, javob yo‘q → server yoqiq, lekin ICMP’ni kimdir to‘syapti. Firewall’ni o‘chirmang — faqat ICMP’ga ruxsat bering.','MAC present, no reply → the server is up but something blocks ICMP. Don’t disable the firewall — just allow ICMP.']]},
+ {id:'C10',c:'fiber',t:['Modemda qizil chiroq','Red light on the modem'],tk:['Ofis menejeri: “Ta’mirdan keyin internet yo‘q, modemda qizil chiroq yonib turibdi.”','Office manager: “After the renovation there’s no internet, the modem has a red light.”'],goal:['PC1 dan 8.8.8.8 ga ping o‘tsin.','Make PC1 ping 8.8.8.8.'],
+  setup(){office({noFiber:true})},done:()=>evOk(e=>dev(e.from).name==='PC1'&&e.inet),
+  hints:[['Modem1 ni bosing — PON holati qanday?','Click Modem1 — what is the PON status?'],['LOS = optik signal yo‘q. Internet bulutini modemning PON portiga <b>optik tola</b> bilan ulang.','LOS = no fibre signal. Connect the Internet cloud to the modem’s PON with <b>fibre</b>.']]},
+ {id:'C11',c:'crimp',t:['Yangi kabel ishlamayapti','The new cable doesn’t work'],tk:['Amaliyotchi PC2 uchun kabelni o‘zi yasab ulagan. Shundan beri PC2 da tarmoq yo‘q, switchdagi port chirog‘i yonmaydi.','An intern crimped a cable for PC2. Since then PC2 has no network and the switch port LED is off.'],goal:['PC2 dan default gateway’ga (192.168.1.1) ping o‘tsin.','Make PC2 ping the gateway (192.168.1.1).'],
+  setup(){const o=office();const l=ST.links.find(x=>x.b.d===o.p2.id);Object.assign(l,{cable:'bad',hname:L('Amaliyotchi kabeli','Intern’s cable'),wires:{a:T568B.slice(),b:['wo','o','g','bl','wb','wg','wbr','br']}})},done:()=>evOk(e=>dev(e.from).name==='PC2'&&e.dst==='192.168.1.1'),
+  hints:[['PC2 kabelini bosing — kabel tester natijasiga qarang.','Click PC2’s cable — read the cable tester.'],['B uchida 3 va 6-pinlar (oq-yashil va yashil) almashib qolgan. 🔧 Kabel ustaxonasida yangi straight kabel yasang, eskisini 🗑 bilan olib, yangisi bilan ulang.','On end B pins 3 and 6 (white-green, green) are swapped. Make a new straight cable 🔧, remove the old one 🗑 and reconnect.']]}];
+
+/* ===================== loading ===================== */
+function loadItem(){HINTS=0;STARTED=Date.now();SEL=null;PEND=null;TRBUSY=false;TERM={};
+ if(MODE==='lab'){LABS[CUR.lab].preset()}else if(MODE==='trouble'){TRS[CUR.trouble].setup();ST.mdix=false}
+ STATES[MODE]=ST;render()}
+function setMode(m){if(m!==MODE)STATES[MODE]=ST;MODE=m;TOOL='move';SEL=null;PEND=null;TERM={};if(STATES[m])ST=STATES[m];else if(m==='free'){ST=newState();STATES.free=ST}else{loadItem();return}TAB='task';render()}
+
+/* ===================== drawing ===================== */
+function icon(d){const t=d.type;let s='';
+ if(t==='pc')s=`<rect x="-24" y="-22" width="48" height="32" rx="4" fill="#172438" stroke="#4c8dff" stroke-width="2.5"/><rect x="-19" y="-17" width="38" height="22" fill="#2b4f8a"/><rect x="-10" y="11" width="20" height="5" rx="1" fill="#4c8dff"/>`;
+ else if(t==='laptop')s=`<rect x="-20" y="-22" width="40" height="27" rx="3" fill="#172438" stroke="#4c8dff" stroke-width="2.5"/><rect x="-15" y="-17" width="30" height="17" fill="#2b4f8a"/><path d="M-28 6h56l-5 8h-46z" fill="#4c8dff"/>`;
+ else if(t==='server'){s=`<rect x="-18" y="-28" width="36" height="52" rx="4" fill="#172438" stroke="#3dd598" stroke-width="2.5"/>`;[-20,-7,6].forEach(y=>s+=`<rect x="-12" y="${y}" width="24" height="8" rx="1" fill="#1d5a3a"/><circle cx="8" cy="${y+4}" r="1.8" fill="#3dd598"/>`)}
+ else if(t==='printer')s=`<rect x="-14" y="-26" width="28" height="16" fill="#fafaf6"/><rect x="-24" y="-12" width="48" height="24" rx="4" fill="#2b2f36" stroke="#93a4bd" stroke-width="2"/><rect x="-14" y="8" width="28" height="10" fill="#fafaf6"/>`;
+ else if(t==='switch'){s=`<rect x="-46" y="-15" width="92" height="30" rx="6" fill="#13324f" stroke="#3dd598" stroke-width="2.5"/>`;for(let i=0;i<8;i++)s+=`<rect x="${-38+i*10}" y="-3" width="7" height="7" rx="1" fill="#0b1322"/>`;s+=`<path d="M-30 -9h14l-3 -3M16 -9h14l-3 -3" stroke="#3dd598" stroke-width="1.5" fill="none"/>`}
+ else if(t==='router')s=`<line x1="-22" y1="-14" x2="-26" y2="-32" stroke="#a98bff" stroke-width="3"/><line x1="22" y1="-14" x2="26" y2="-32" stroke="#a98bff" stroke-width="3"/><rect x="-40" y="-15" width="80" height="30" rx="15" fill="#2a1f4f" stroke="#a98bff" stroke-width="2.5"/><path d="M-14 -3h22l-5 -5M14 4h-22l5 5" stroke="#e9eff8" stroke-width="2" fill="none"/>`;
+ else if(t==='ap')s=`<path d="M-16 -22a22 22 0 0 1 32 0M-10 -15a13 13 0 0 1 20 0" stroke="#4c8dff" stroke-width="2.5" fill="none"/><ellipse cx="0" cy="0" rx="28" ry="11" fill="#e6e8ec" stroke="#93a4bd" stroke-width="2"/><circle cx="0" cy="-1" r="3" fill="#3dd598"/>`;
+ else if(t==='modem'){const pon=ST.links.some(l=>NET.up[l.id]&&((l.a.d===d.id&&l.a.p==='PON')||(l.b.d===d.id&&l.b.p==='PON')));s=`<rect x="-30" y="-15" width="60" height="30" rx="6" fill="#2b2f36" stroke="#93a4bd" stroke-width="2"/><circle cx="-16" cy="0" r="4" fill="#3dd598"/><circle cx="0" cy="0" r="4" fill="${pon?'#3dd598':'#ff5f5f'}"/><circle cx="16" cy="0" r="4" fill="${pon?'#3dd598':'#5d6f8a'}"/>`}
+ else if(t==='isp')s=`<path d="M-50 16a18 18 0 0 1 6 -34a26 26 0 0 1 48 -8a20 20 0 0 1 36 12a16 16 0 0 1 10 30z" fill="#1d2b45" stroke="#93a4bd" stroke-width="2"/><text x="0" y="5" text-anchor="middle" fill="#e9eff8" font-size="13" font-family="Chakra Petch" font-weight="700">ISP</text>`;
+ return s}
+function sub(d){const t=d.type;
+ if(HOSTS.includes(t)){const h=NET.hIf[d.id];if(!h.media)return['#ff8a8a',L('kabel yo‘q','no link')];if(h.dup)return['#ff8a8a',h.ip+' (dup)'];if(h.src==='apipa')return['#e8c35a',h.ip];if(h.ip)return['#9cf0c9',h.ip];return['#ff8a8a',L('IP yo‘q','no IP')]}
+ if(t==='router'){const o=NET.rIf[d.id];const a=[o['G0/0'].ip,o['G0/1'].ip].filter(Boolean);return[a.length?'#c9b8ff':'#ff8a8a',a.length?a.join(' · '):L('sozlanmagan','not set')]}
+ if(t==='ap')return[d.cfg.ssid?'#9cc4ff':'#ff8a8a',d.cfg.ssid?'“'+d.cfg.ssid+'”':L('SSID yo‘q','no SSID')];
+ if(t==='modem'){const pon=ST.links.some(l=>NET.up[l.id]&&((l.a.d===d.id&&l.a.p==='PON')||(l.b.d===d.id&&l.b.p==='PON')));return pon?['#9cf0c9','PON ✓']:['#ff8a8a','LOS']}
+ if(t==='isp')return['#93a4bd',ISPGW];return['#93a4bd','']}
+function drawCv(){const sv=$('#cv');let h='';
+ const lbl=(x,y,t,c='#93a4bd')=>`<text x="${x}" y="${y}" text-anchor="middle" fill="${c}" font-size="11" font-family="IBM Plex Mono" style="paint-order:stroke;stroke:#0b1322;stroke-width:4px">${esc(t)}</text>`;
+ ST.links.forEach(l=>{const A=dev(l.a.d),B=dev(l.b.d);if(!A||!B)return;const up=NET.up[l.id];const cb=CABLES[l.cable];const col=up?cb.c:'#ff5f5f';
+  h+=`<g data-l="${l.id}"><line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="${col}" stroke-width="${l.cable==='fiber'?4.5:3}" stroke-dasharray="${cb.d}" stroke-linecap="round"/><line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="transparent" stroke-width="16" style="cursor:pointer"/>`;
+  const dx=B.x-A.x,dy=B.y-A.y,len=Math.hypot(dx,dy)||1,k=Math.min(.42,72/len);
+  h+=lbl(A.x+dx*k,A.y+dy*k+4,l.a.p)+lbl(B.x-dx*k,B.y-dy*k+4,l.b.p);
+  if(l.wires){const mx=(A.x+B.x)/2,my=(A.y+B.y)/2;h+=`<text x="${mx+14}" y="${my-8}" font-size="14">🛠</text>`}
+  if(!up){const mx=(A.x+B.x)/2,my=(A.y+B.y)/2;h+=`<circle cx="${mx}" cy="${my}" r="10" fill="#3b1620" stroke="#ff5f5f" stroke-width="2"/><text x="${mx}" y="${my+5}" text-anchor="middle" fill="#ff5f5f" font-size="14" font-weight="700">✗</text>`}
+  h+='</g>'});
+ Object.entries(NET.assoc).forEach(([a,b])=>{const A=dev(a),B=dev(b);h+=`<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#4c8dff" stroke-width="2" stroke-dasharray="2 6" stroke-linecap="round"/><text x="${(A.x+B.x)/2}" y="${(A.y+B.y)/2-6}" text-anchor="middle" fill="#9cc4ff" font-size="14">📶</text>`});
+ ST.devs.forEach(d=>{const[sc,st]=sub(d);const sel=SEL===d.id||(PEND&&PEND.d===d.id);
+  h+=`<g class="dv" data-d="${d.id}" transform="translate(${d.x} ${d.y})">${sel?`<rect x="-56" y="-42" width="112" height="98" rx="12" fill="rgba(242,139,60,.08)" stroke="#f28b3c" stroke-width="2" stroke-dasharray="6 5"/>`:''}<rect x="-52" y="-40" width="104" height="92" fill="transparent"/>${icon(d)}
+   <text x="0" y="${d.type==='isp'?36:34}" text-anchor="middle" fill="#e9eff8" font-size="13" font-family="Chakra Petch" font-weight="700" style="paint-order:stroke;stroke:#0b1322;stroke-width:4px">${esc(d.name)}</text>
+   <text x="0" y="${d.type==='isp'?50:48}" text-anchor="middle" fill="${sc}" font-size="11" font-family="IBM Plex Mono" style="paint-order:stroke;stroke:#0b1322;stroke-width:4px">${esc(st)}</text></g>`});
+ if(!ST.devs.length)h+=`<text x="500" y="320" text-anchor="middle" fill="#5d6f8a" font-size="18" font-family="IBM Plex Sans">${esc(L('Chap paneldan qurilma qo‘shing','Add a device from the left panel'))}</text>`;
+ h+=`<line id="tmpL" x1="0" y1="0" x2="0" y2="0" stroke="${CABLES[curType()].c}" stroke-width="3" stroke-dasharray="6 6" visibility="hidden" pointer-events="none"/><g id="anim" pointer-events="none"></g>`;
+ sv.innerHTML=h}
+
+/* ===================== palette & tools ===================== */
+function renderPal(){const p=$('#pal');const ic=t=>`<svg viewBox="-56 -40 112 70"><g transform="scale(.95)">${icon({type:t,id:'d0'})}</g></svg>`;
+ p.innerHTML=`<div class="plbl">${L('Qurilmalar','Devices')}</div>`+Object.keys(TYPES).map(t=>`<button class="pbtn" data-add="${t}">${ic(t)}<span>${LL(TYPES[t].lab)}</span></button>`).join('')+
+ `<div class="plbl">${L('Asboblar','Tools')}</div>
+ <button class="tbtn ${TOOL==='move'?'on':''}" data-tool="move">✋ ${L('Tanlash / surish','Select / move')}</button>
+ <button class="tbtn ${TOOL==='cable'?'on':''}" data-tool="cable">🔌 ${L('Kabel','Cable')}</button>
+ <button class="tbtn" id="crimpB">🔧 ${L('Kabel yasash (RJ-45)','Make a cable (RJ-45)')}</button>
+ <div class="cab">${Object.entries(CABLES).filter(([k])=>k!=='bad').map(([k,c])=>`<label class="${CABLE===k?'on':''}"><input type="radio" name="cab" value="${k}" ${CABLE===k?'checked':''} hidden><i style="border-color:${c.c};border-top-style:${k==='cross'?'dashed':'solid'}"></i>${LL(c.lab)}</label>`).join('')}${INV.slice(-6).map(it=>`<label class="${CABLE==='home:'+it.id?'on':''}"><input type="radio" name="cab" value="home:${it.id}" ${CABLE==='home:'+it.id?'checked':''} hidden><i style="border-color:${CABLES[it.type].c};border-top-style:${it.type==='straight'?'solid':'dashed'}"></i>🛠 ${L('Kabel','Cable')} ${it.name} · ${typeLab(it.type)}</label>`).join('')}</div>
+ <button class="tbtn ${TOOL==='delete'?'on':''}" data-tool="delete">🗑 ${L('O‘chirish','Delete')}</button>
+ <div class="plbl">${L('Sozlamalar','Options')}</div>
+ <label class="chk"><input type="checkbox" id="mdix" ${ST.mdix?'checked':''} ${MODE==='trouble'?'disabled':''}><span>Auto-MDIX <small class="muted">${L('(har qanday UTP kabel ishlaydi)','(any UTP cable works)')}</small></span></label>
+ ${MODE==='free'?`<button class="btn ghost" id="sample">${L('Namuna ofis tarmog‘i','Sample office network')}</button><button class="btn ghost" id="clear">${L('Tozalash','Clear all')}</button>`:''}`;
+ $$('[data-add]',p).forEach(b=>b.onclick=()=>{const n=ST.devs.length;const d=addDev(b.dataset.add,500+((n%5)-2)*70,320+((Math.floor(n/5)%3)-1)*60);SEL=d.id;TOOL='move';if(TAB==='term'&&!HOSTS.includes(d.type))TAB='cfg';else if(TAB!=='task')TAB='cfg';changed(true)});
+ $$('[data-tool]',p).forEach(b=>b.onclick=()=>{TOOL=b.dataset.tool;PEND=null;hidePM();renderPal();drawCv();hint()});
+ $$('input[name=cab]',p).forEach(r=>r.onchange=()=>{CABLE=r.value;TOOL='cable';PEND=null;renderPal();drawCv();hint()});
+ $('#crimpB',p).onclick=crimpOpen;
+ $('#mdix',p).onchange=e=>{ST.mdix=e.target.checked;changed()};
+ if($('#sample',p))$('#sample',p).onclick=()=>{office();STATES.free=ST;SEL=null;render()};
+ if($('#clear',p))$('#clear',p).onclick=()=>{ST=newState();STATES.free=ST;SEL=null;TERM={};render()};
+ $('#legend').innerHTML=Object.values(CABLES).map(c=>`<span><i style="border-color:${c.c};border-top-style:${c.d==='0'?'solid':'dashed'}"></i>${LL(c.lab).split(' ')[0]}</span>`).join('')+`<span><i style="border-color:#ff5f5f"></i>${L('ishlamaydi','down')}</span><span>📶 Wi-Fi</span>`}
+function hint(){const h=$('#hint');let t='';
+ if(TOOL==='move')t=L('Qurilmani bosing — sozlash; suring — joyini o‘zgartirish. Kabelni bosing — uning holati.','Click a device to configure it, drag to move. Click a cable to see its status.');
+ if(TOOL==='cable')t=PEND?L(`${dev(PEND.d).name} (${PEND.p}) tanlandi → ikkinchi qurilmani bosing. Esc — bekor qilish.`,`${dev(PEND.d).name} (${PEND.p}) picked → click the second device. Esc cancels.`):L(`Kabel: <b>${homeItem()?'🛠 '+homeItem().name+' · '+typeLab(curType()):LL(CABLES[CABLE].lab)}</b> — birinchi qurilmani bosing.`,`Cable: <b>${homeItem()?'🛠 '+homeItem().name+' · '+typeLab(curType()):LL(CABLES[CABLE].lab)}</b> — click the first device.`);
+ if(TOOL==='delete')t=L('O‘chirish: qurilma yoki kabelni bosing.','Delete: click a device or cable.');
+ h.innerHTML=t}
+
+/* ===================== canvas interaction ===================== */
+const cv=$('#cv');let DRAG=null;
+function pt(e){const p=cv.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(cv.getScreenCTM().inverse())}
+function hidePM(){$('#pmenu').hidden=true}
+function freePorts(d,kind){return PORTS[d.type].filter(p=>p[1]===kind&&!portLink(d.id,p[0])).map(p=>p[0])}
+function pickPort(d,e,cb){const kind=CABLE==='fiber'?'fiber':'eth';const fp=freePorts(d,kind);
+ if(!fp.length){toast(PORTS[d.type].some(p=>p[1]===kind)?L(`${d.name}: bo‘sh port qolmadi.`,`${d.name}: no free port left.`):L(`${d.name} da ${kind==='fiber'?'optik':'UTP (RJ-45)'} port yo‘q. Boshqa kabel turini tanlang.`,`${d.name} has no ${kind==='fiber'?'fibre':'UTP (RJ-45)'} port. Pick another cable.`));return}
+ if(fp.length===1||d.type==='switch'){cb(fp[0]);return}
+ const m=$('#pmenu'),r=$('#cvwrap').getBoundingClientRect();m.innerHTML=`<b>${esc(d.name)} — ${L('port','port')}</b>`+fp.map(p=>`<button data-p="${p}">${p}${d.type==='router'&&p==='WAN'?' (Internet)':''}</button>`).join('');
+ m.style.left=Math.min(e.clientX-r.left+8,r.width-170)+'px';m.style.top=Math.min(e.clientY-r.top+8,r.height-40-fp.length*32)+'px';m.hidden=false;
+ $$('button',m).forEach(b=>b.onclick=()=>{hidePM();cb(b.dataset.p)})}
+cv.addEventListener('pointerdown',e=>{hidePM();const g=e.target.closest('[data-d]'),lk=e.target.closest('[data-l]');const p=pt(e);
+ if(TOOL==='move'){if(g){const d=dev(g.dataset.d);DRAG={d,ox:p.x-d.x,oy:p.y-d.y,moved:false};cv.setPointerCapture(e.pointerId)}else if(lk){const l=ST.links.find(x=>x.id===lk.dataset.l);if(l.wires){openTester(l);return}toast(`<b>${LL(CABLES[l.cable].lab)}</b> · ${dev(l.a.d).name} ${l.a.p} ↔ ${dev(l.b.d).name} ${l.b.p}<br>${linkReason(l)}`,5000)}else{SEL=null;renderSide();drawCv()}}
+ else if(TOOL==='cable'){if(!g){PEND=null;drawCv();hint();return}const d=dev(g.dataset.d);
+  pickPort(d,e,port=>{if(!PEND){PEND={d:d.id,p:port};drawCv();hint();return}if(PEND.d===d.id){toast(L('Qurilmani o‘ziga ulab bo‘lmaydi.','Can’t connect a device to itself.'));return}
+   const A=dev(PEND.d);const hm=homeItem();const l=addLink(A,PEND.p,d,port,hm?hm.type:CABLE);if(hm)Object.assign(l,{home:hm.id,hname:L('Kabel ','Cable ')+hm.name,wires:{a:hm.a.slice(),b:hm.b.slice()}});PEND=null;changed(true);toast(linkUp(l)?L(`✓ ${A.name} ${l.a.p} ↔ ${d.name} ${port} ulandi.`,`✓ ${A.name} ${l.a.p} ↔ ${d.name} ${port} connected.`):linkReason(l),4500)})}
+ else if(TOOL==='delete'){if(g){const id=g.dataset.d;ST.devs=ST.devs.filter(d=>d.id!==id);ST.links=ST.links.filter(l=>l.a.d!==id&&l.b.d!==id);ST.devs.forEach(d=>{if(d.type==='laptop'&&NET.assoc[d.id]===id){}});if(SEL===id)SEL=null;delete TERM[id];changed(true)}else if(lk){ST.links=ST.links.filter(l=>l.id!==lk.dataset.l);changed(true)}}});
+cv.addEventListener('pointermove',e=>{const p=pt(e);if(DRAG){DRAG.d.x=Math.max(50,Math.min(950,p.x-DRAG.ox));DRAG.d.y=Math.max(45,Math.min(590,p.y-DRAG.oy));if(Math.abs(DRAG.ox-(p.x-DRAG.d.x))>0||1)DRAG.moved=true;drawCv();return}
+ if(TOOL==='cable'&&PEND){const A=dev(PEND.d),t=$('#tmpL');if(t){t.setAttribute('x1',A.x);t.setAttribute('y1',A.y);t.setAttribute('x2',p.x);t.setAttribute('y2',p.y);t.setAttribute('visibility','visible')}}});
+let downAt=null;cv.addEventListener('pointerdown',e=>{downAt=[e.clientX,e.clientY]},true);
+cv.addEventListener('pointerup',e=>{if(DRAG){const mv=downAt&&Math.hypot(e.clientX-downAt[0],e.clientY-downAt[1])>4;const d=DRAG.d;DRAG=null;if(!mv){SEL=d.id;if(TAB==='task'||(TAB==='term'&&!HOSTS.includes(d.type)))TAB='cfg';if(TAB==='term'&&!['pc','laptop','server'].includes(d.type))TAB='cfg';renderSide();drawCv()}}});
+document.addEventListener('keydown',e=>{if(e.target.closest('input,select,textarea'))return;if(e.key==='Escape'){PEND=null;hidePM();drawCv();hint()}if((e.key==='Delete'||e.key==='Backspace')&&SEL){const id=SEL;ST.devs=ST.devs.filter(d=>d.id!==id);ST.links=ST.links.filter(l=>l.a.d!==id&&l.b.d!==id);SEL=null;changed(true)}});
+
+/* ===================== side panel ===================== */
+function renderTabs(){const d=SEL&&dev(SEL);const termOk=d&&['pc','laptop','server'].includes(d.type);if(TAB==='term'&&!termOk)TAB=d?'cfg':'task';if(TAB==='cfg'&&!d)TAB='task';
+ $('#tabs').innerHTML=[['task',MODE==='lab'?L('Vazifa','Task'):MODE==='trouble'?L('Muammo','Ticket'):L('Yo‘riqnoma','Guide')],['cfg',L('Sozlash','Settings')+(d?' · '+d.name:'')],['term','Terminal']].map(([k,t])=>`<button data-t="${k}" class="${TAB===k?'on':''}" ${k==='cfg'&&!d||k==='term'&&!termOk?'disabled':''}>${esc(t)}</button>`).join('');
+ $$('#tabs button').forEach(b=>b.onclick=()=>{TAB=b.dataset.t;renderSide()})}
+function renderSide(){renderTabs();const b=$('#sbody');if(TAB==='task')renderTask(b);else if(TAB==='cfg')renderCfg(b);else renderTerm(b)}
+
+/* ---------- task tab ---------- */
+function fmtT(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function renderTask(b){
+ if(MODE==='free'){b.innerHTML=`<div class="card"><h3>${L('Erkin rejim','Free mode')}</h3><p class="muted" style="margin:0;line-height:1.5">${L('O‘z tarmog‘ingizni yig‘ing va sinab ko‘ring. “Namuna ofis tarmog‘i” tugmasi tayyor tarmoqni yuklaydi.','Build and test any network. “Sample office network” loads a ready one.')}</p></div>${cheat()}`;return}
+ if(MODE==='lab'){const M=LABS[CUR.lab];const st=M.steps.map(s=>!!s[1]());const all=st.every((x,i)=>x||M.steps[i][2]);
+  if(all&&!RES.labs[M.id]){RES.labs[M.id]={t:Math.round((Date.now()-STARTED)/1000),at:Date.now()};saveRes();report({type:'lab',code:M.id,title:LL(M.t),score:100,t:RES.labs[M.id].t,hints:HINTS});toast('🎉 '+L('Vazifa bajarildi!','Task complete!'),4000)}
+  b.innerHTML=`<div class="chips">${LABS.map((m,i)=>`<button class="chip ${i===CUR.lab?'on':''} ${RES.labs[m.id]?'done':''}" data-m="${i}">${RES.labs[m.id]?'✓':i+1} ${esc(LL(m.t).split(' ').slice(0,2).join(' '))}</button>`).join('')}</div>
+   <div class="card"><div class="muted" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase">${L('Laboratoriya','Lab')} ${CUR.lab+1} / ${LABS.length}</div><h3>${esc(LL(M.t))}</h3><p class="muted" style="margin:0;line-height:1.5;font-size:14px">${LL(M.d)}</p></div>
+   <div class="card"><ul class="steps">${M.steps.map((s,i)=>`<li class="${st[i]?'ok':''}"><i>${st[i]?'✓':i+1}</i><span>${LL(s[0])}${s[2]?` <small class="muted">(${L('ixtiyoriy','optional')})</small>`:''}</span></li>`).join('')}</ul></div>
+   ${all?`<div class="win">🎉 <b>${L('Barakalla!','Well done!')}</b> ${L('Barcha qadamlar bajarildi.','All steps done.')} ${RES.labs[M.id]?L('Vaqt: ','Time: ')+fmtT(RES.labs[M.id].t):''}</div>`:''}
+   <div class="row"><button class="btn ghost" id="hintB">💡 ${L('Maslahat','Hint')} (${Math.min(HINTS,M.hints.length)}/${M.hints.length})</button><button class="btn ghost" id="resetB">↺ ${L('Qaytadan','Restart')}</button>${all&&CUR.lab<LABS.length-1?`<button class="btn gr" id="nextB">${L('Keyingi vazifa →','Next task →')}</button>`:''}</div>
+   ${M.hints.slice(0,HINTS).map(h=>`<div class="hintbox">💡 ${LL(h)}</div>`).join('')}${cheat()}`;
+  $$('[data-m]',b).forEach(x=>x.onclick=()=>{CUR.lab=+x.dataset.m;loadItem()});
+  $('#hintB',b).onclick=()=>{HINTS=Math.min(HINTS+1,M.hints.length);renderSide()};$('#resetB',b).onclick=()=>loadItem();if($('#nextB',b))$('#nextB',b).onclick=()=>{CUR.lab++;loadItem()};return}
+ const C=TRS[CUR.trouble];const r=RES.tr[C.id];const solved=C.done();
+ b.innerHTML=`<div class="chips">${TRS.map((c,i)=>`<button class="chip ${i===CUR.trouble?'on':''} ${RES.tr[c.id]?'done':''}" data-c="${i}">${i+1}${RES.tr[c.id]?` <span class="sc">${RES.tr[c.id].score}</span>`:''}</button>`).join('')}</div>
+  <div class="card"><div class="row" style="justify-content:space-between"><span class="muted" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase">${L('Nosozlik','Fault')} ${CUR.trouble+1} / ${TRS.length}</span><span class="timer" id="tmr">⏱ ${fmtT((Date.now()-STARTED)/1000)}</span></div><h3>${esc(LL(C.t))}</h3>
+  <div class="ticket"><small>📞 ${L('Help Desk murojaati','Help Desk ticket')}</small>${LL(C.tk)}</div></div>
+  <div class="card"><b>🎯 ${L('Maqsad','Goal')}:</b> ${LL(C.goal)}<div style="margin-top:8px;font-size:13.5px">${solved?`<span style="color:var(--green)">✓ ${L('Maqsadga erishildi','Goal reached')}</span>`:`<span class="muted">${L('Hali bajarilmagan — tuzating va terminalda tekshiring.','Not yet — fix it and test in the terminal.')}</span>`}</div></div>
+  ${r?`<div class="win">🏆 ${L('Natija','Score')}: <b>${r.score}</b> / 100 · ${L('vaqt','time')} ${fmtT(r.t)} · ${L('maslahat','hints')}: ${r.h} · ${L('sabab','cause')}: ${r.cause?'✓':'✗'}</div>`:''}
+  <div class="row"><button class="btn ghost" id="hintB">💡 ${L('Maslahat (−20 ball)','Hint (−20 pts)')} ${HINTS}/${C.hints.length}</button><button class="btn ghost" id="resetB">↺ ${L('Qaytadan','Restart')}</button>${CUR.trouble<TRS.length-1?`<button class="btn ${r?'gr':'ghost'}" id="nextB">${L('Keyingisi →','Next →')}</button>`:''}</div>
+  ${C.hints.slice(0,HINTS).map(h=>`<div class="hintbox">💡 ${LL(h)}</div>`).join('')}${cheat()}`;
+ $$('[data-c]',b).forEach(x=>x.onclick=()=>{CUR.trouble=+x.dataset.c;loadItem()});
+ $('#hintB',b).onclick=()=>{if(HINTS<C.hints.length){HINTS++;renderSide()}};$('#resetB',b).onclick=()=>loadItem();if($('#nextB',b))$('#nextB',b).onclick=()=>{CUR.trouble++;loadItem()};
+ if(solved&&!r&&!TRBUSY){TRBUSY=true;setTimeout(()=>causeQuiz(C),700)}}
+function cheat(){return`<details class="card"><summary style="cursor:pointer;font-weight:600">⌨ ${L('Terminal buyruqlari','Terminal commands')}</summary><div class="live" style="margin-top:8px">ipconfig            ${L('— IP sozlamalari','— IP settings')}
+ipconfig /all       ${L('— to‘liq (MAC, DHCP, DNS)','— full (MAC, DHCP, DNS)')}
+ipconfig /release   ${L('— DHCP manzilni qaytarish','— release DHCP lease')}
+ipconfig /renew     ${L('— DHCP’dan yangi manzil','— get a new DHCP lease')}
+ping &lt;ip|nom&gt;       ${L('— aloqani tekshirish','— test reachability')}
+tracert &lt;ip|nom&gt;    ${L('— marshrut (routerlar)','— route (hops)')}
+nslookup &lt;nom&gt;      ${L('— DNS so‘rovi','— DNS lookup')}
+arp -a              ${L('— qo‘shnilar MAC jadvali','— neighbours’ MAC table')}
+hostname · cls · help</div></details>`}
+function causeQuiz(C){const keys=Object.keys(CAUSES).filter(k=>k!==C.c).sort(()=>Math.random()-.5).slice(0,3).concat(C.c).sort(()=>Math.random()-.5);const t=Math.round((Date.now()-STARTED)/1000);
+ modal(`<h2>✓ ${L('Muammo bartaraf etildi!','Fixed!')}</h2><p class="muted" style="margin:0">${L('Oxirgi savol: muammoning asl sababi nima edi?','Last question: what was the real cause?')}</p><div class="opts">${keys.map(k=>`<button data-k="${k}">${esc(LL(CAUSES[k]))}</button>`).join('')}</div><div id="cqr"></div>`);
+ $$('.opts button').forEach(bt=>bt.onclick=()=>{if($('.opts').dataset.done)return;$('.opts').dataset.done=1;const ok=bt.dataset.k===C.c;bt.classList.add(ok?'ok':'no');$(`.opts button[data-k="${C.c}"]`).classList.add('ok');
+  let sc=Math.max(40,100-HINTS*20);if(!ok)sc=Math.max(20,sc-20);RES.tr[C.id]={score:sc,t,h:HINTS,cause:ok,at:Date.now()};saveRes();report({type:'fault',code:C.id,title:LL(C.t),score:sc,t,hints:HINTS,cause:ok?'ha':'yo‘q'});
+  $('#cqr').innerHTML=`<div class="win" style="margin-top:4px">${ok?'✓ '+L('To‘g‘ri!','Correct!'):'✗ '+L('Asl sabab: ','The cause was: ')+esc(LL(CAUSES[C.c]))}<br>${L('Ball','Score')}: <b class="big" style="font-size:22px">${sc}</b> / 100 · ${L('vaqt','time')} ${fmtT(t)}</div><div class="row" style="margin-top:10px"><button class="btn gr" id="cqn">${CUR.trouble<TRS.length-1?L('Keyingi nosozlik →','Next fault →'):L('Yopish','Close')}</button></div>`;
+  $('#cqn').onclick=()=>{closeModal();if(CUR.trouble<TRS.length-1){CUR.trouble++;loadItem()}else renderSide()}})}
+setInterval(()=>{const t=$('#tmr');if(t&&MODE==='trouble')t.textContent='⏱ '+fmtT((Date.now()-STARTED)/1000)},1000);
+
+/* ---------- config tab ---------- */
+function field(lab,path,val,o={}){return`<label>${lab}</label><input data-path="${path}" value="${esc(val)}" ${o.ph?`placeholder="${o.ph}"`:''} ${o.list?`list="${o.list}"`:''} ${o.dis?'disabled':''} ${o.ip?'data-ip="1"':''} ${o.type?`type="${o.type}"`:''} spellcheck="false" autocomplete="off">`}
+function setPath(d,path,v){const ks=path.split('.');let o=d;for(let i=0;i<ks.length-1;i++)o=o[ks[i]];o[ks[ks.length-1]]=v}
+function renderCfg(b){const d=dev(SEL);if(!d){b.innerHTML='';return}const c=d.cfg,t=d.type;let h=`<div class="fld">${field(L('Nomi','Name'),'name',d.name)}</div>`;
+ if(HOSTS.includes(t)){h+=`<div class="sect">${L('IP sozlamalari','IP settings')}</div><div class="row"><label class="chk"><input type="radio" name="mode" value="static" ${c.mode==='static'?'checked':''}> ${L('Statik (qo‘lda)','Static (manual)')}</label><label class="chk"><input type="radio" name="mode" value="dhcp" ${c.mode==='dhcp'?'checked':''}> ${L('DHCP (avtomatik)','DHCP (automatic)')}</label></div>
+  <div class="fld">${field('IP','cfg.ip',c.ip,{ph:'192.168.1.10',dis:c.mode==='dhcp',ip:1})}${field('Mask','cfg.mask',c.mask,{ph:'255.255.255.0',list:'masks',dis:c.mode==='dhcp',ip:1})}${field('Gateway','cfg.gw',c.gw,{ph:'192.168.1.1',dis:c.mode==='dhcp',ip:1})}${field('DNS','cfg.dns',c.dns,{ph:'8.8.8.8',dis:c.mode==='dhcp',ip:1})}</div>`;
+  if(t==='laptop'){const aps=devsOf('ap').filter(a=>a.cfg.ssid);h+=`<div class="sect">📶 Wi-Fi</div><div class="fld"><label>SSID</label><select data-path="cfg.wifi.ssid"><option value="">— ${L('ulanmagan','not connected')} —</option>${aps.map(a=>`<option ${a.cfg.ssid===c.wifi.ssid?'selected':''}>${esc(a.cfg.ssid)}</option>`).join('')}${c.wifi.ssid&&!aps.some(a=>a.cfg.ssid===c.wifi.ssid)?`<option selected>${esc(c.wifi.ssid)}</option>`:''}</select>${field(L('Parol','Password'),'cfg.wifi.pass',c.wifi.pass)}</div>`}
+  if(t==='server'){h+=`<div class="sect">DNS ${L('xizmati','service')}</div><label class="chk"><input type="checkbox" data-path="cfg.dnsOn" ${c.dnsOn?'checked':''}> ${L('DNS server sifatida ishlash','Act as a DNS server')}</label><table class="iftab"><tr><th>${L('Nom','Name')}</th><th>IP ${L('(bo‘sh = o‘zi)','(blank = self)')}</th></tr>${c.recs.map((r,i)=>`<tr><td><input class="mini" data-path="cfg.recs.${i}.0" value="${esc(r[0])}"></td><td><input class="mini" data-path="cfg.recs.${i}.1" value="${esc(r[1])}" data-ip="1"></td></tr>`).join('')}</table>`}
+  if(t!=='printer')h+=`<div class="sect">🛡 Firewall</div><label class="chk"><input type="checkbox" data-path="cfg.fw" ${c.fw?'checked':''}> ${L('Kiruvchi ping (ICMP Echo) ni bloklash','Block incoming ping (ICMP Echo)')}</label>`;
+  h+=`<div class="sect">${L('Joriy holat','Current state')}</div><div class="live" id="live"></div>`;
+  if(['pc','laptop','server'].includes(t))h+=`<button class="btn or" id="toTerm">⌨ ${L('Terminalni ochish','Open terminal')}</button>`}
+ if(t==='router'){h+=`<div class="sect">${L('Interfeyslar (LAN)','Interfaces (LAN)')}</div><table class="iftab"><tr><th></th><th>Port</th><th>IP</th><th>Mask</th></tr>${['G0/0','G0/1'].map(p=>`<tr><td><span class="dot" data-up="${p}"></span></td><td class="mono">${p}</td><td><input class="mini" data-path="cfg.ifs.${p}.ip" value="${esc(c.ifs[p].ip)}" placeholder="192.168.${p==='G0/0'?1:2}.1" data-ip="1"></td><td><input class="mini" data-path="cfg.ifs.${p}.mask" value="${esc(c.ifs[p].mask)}" placeholder="255.255.255.0" list="masks" data-ip="1"></td></tr>`).join('')}</table>
+  <div class="sect">WAN (Internet)</div><div class="fld"><label>${L('Rejim','Mode')}</label><select data-path="cfg.wan.mode" data-rerender="1"><option value="dhcp" ${c.wan.mode==='dhcp'?'selected':''}>DHCP (${L('provayderdan','from ISP')})</option><option value="static" ${c.wan.mode==='static'?'selected':''}>${L('Statik','Static')}</option></select>
+  ${c.wan.mode==='static'?field('IP','cfg.wan.ip',c.wan.ip,{ip:1,ph:'84.54.70.50'})+field('Mask','cfg.wan.mask',c.wan.mask,{ip:1,list:'masks'})+field('Gateway','cfg.wan.gw',c.wan.gw,{ip:1,ph:ISPGW}):''}</div>
+  <div class="sect">DHCP ${L('server','server')}</div><table class="iftab"><tr><th>Port</th><th>${L('Yoqilgan','On')}</th><th>${L('Boshlanish','Start')}</th><th>${L('Soni','Count')}</th><th>DNS</th></tr>${['G0/0','G0/1'].map(p=>`<tr><td class="mono">${p}</td><td><input type="checkbox" data-path="cfg.dhcp.${p}.on" ${c.dhcp[p].on?'checked':''}></td><td><input class="mini" data-path="cfg.dhcp.${p}.start" value="${esc(c.dhcp[p].start)}" placeholder="192.168.${p==='G0/0'?1:2}.100" data-ip="1"></td><td><input class="mini" data-path="cfg.dhcp.${p}.count" value="${esc(c.dhcp[p].count)}" style="width:52px"></td><td><input class="mini" data-path="cfg.dhcp.${p}.dns" value="${esc(c.dhcp[p].dns)}" placeholder="${L('router','router')}" data-ip="1"></td></tr>`).join('')}</table>
+  <div class="muted" style="font-size:12.5px">${L('DNS bo‘sh qolsa, kompyuterlarga router’ning o‘zi DNS sifatida beriladi.','Blank DNS = the router itself acts as DNS.')}</div>
+  <div class="sect">NAT</div><label class="chk"><input type="checkbox" data-path="cfg.nat" ${c.nat?'checked':''}> ${L('NAT (private IP’larni WAN public IP’ga almashtirish)','NAT (translate private IPs to the WAN public IP)')}</label>
+  <div class="sect">${L('Joriy holat','Current state')}</div><div class="live" id="live"></div>`}
+ if(t==='ap')h+=`<div class="sect">${L('Simsiz tarmoq','Wireless')}</div><div class="fld">${field('SSID','cfg.ssid',c.ssid,{ph:'CyberLab'})}${field(L('Parol (WPA2)','Password (WPA2)'),'cfg.pass',c.pass,{ph:L('kamida 8 belgi','8+ characters')})}</div><div class="sect">${L('Joriy holat','Current state')}</div><div class="live" id="live"></div>`;
+ if(['switch','modem','isp'].includes(t))h+=`<div class="sect">${L('Portlar','Ports')}</div><div class="live" id="live"></div>`;
+ if(t==='isp')h+=`<div class="card muted" style="font-size:13.5px;line-height:1.5">${L('Provayder: router WAN portiga DHCP orqali public IP beradi (84.54.70.0/24), DNS — 8.8.8.8. Internetdagi manzillar: 8.8.8.8, 1.1.1.1, google.com, youtube.com, cyber.uz.','The ISP gives the router WAN a public IP by DHCP (84.54.70.0/24), DNS 8.8.8.8. Internet hosts: 8.8.8.8, 1.1.1.1, google.com, youtube.com, cyber.uz.')}</div>`;
+ b.innerHTML=h;
+ $$('input[data-path],select[data-path]',b).forEach(el=>{const ev=el.type==='checkbox'||el.tagName==='SELECT'?'change':'input';el.addEventListener(ev,()=>{let v=el.type==='checkbox'?el.checked:el.value;const p=el.dataset.path;
+  if(p.startsWith('cfg.recs.')){const[,,i,j]=p.split('.');d.cfg.recs[+i][+j]=v}else setPath(d,p,v);
+  if(el.dataset.ip)el.classList.toggle('bad',!!v&&ip2n(v)==null);
+  if(el.dataset.rerender){changed();renderSide()}else changed()})});
+ $$('input[data-ip]',b).forEach(el=>el.classList.toggle('bad',!!el.value&&ip2n(el.value)==null));
+ $$('input[name=mode]',b).forEach(r=>r.onchange=()=>{d.cfg.mode=r.value;if(r.value==='dhcp')d.cfg.released=false;changed();renderSide()});
+ if($('#toTerm',b))$('#toTerm',b).onclick=()=>{TAB='term';renderSide()};
+ live()}
+function live(){const el=$('#live');const d=SEL&&dev(SEL);if(!el||!d)return;const t=d.type;const G=s=>`<span class="g">${s}</span>`,R=s=>`<span class="r">${s}</span>`,Y=s=>`<span class="y">${s}</span>`;let s='';
+ if(HOSTS.includes(t)){const h=NET.hIf[d.id];
+  s+=L('Ulanish: ','Link: ')+(h.media?G(h.ad==='wifi'?'Wi-Fi ✓':'Ethernet ✓'):R(L('yo‘q (Media disconnected)','none (Media disconnected)')))+'\n';
+  if(t==='laptop'){const w=NET.wifiSt[d.id];s+='Wi-Fi: '+({none:L('tanlanmagan','not chosen'),nossid:R(L('bunday SSID topilmadi','SSID not found')),apweak:R(L('AP paroli 8 belgidan kam','AP password < 8 chars')),badpass:R(L('parol noto‘g‘ri','wrong password')),ok:G(L('ulangan ✓','connected ✓'))}[w])+'\n'}
+  if(h.media){s+='IP:      '+(h.dup?R(h.ip+L(' (takrorlangan!)',' (duplicate!)')):h.src==='apipa'?Y(h.ip+' (APIPA — DHCP '+L('javob bermadi','no answer')+')'):h.ip?G(h.ip+(h.src==='dhcp'?' (DHCP)':'')):R(L('yo‘q yoki noto‘g‘ri','none or invalid')))+'\n';
+   s+='Mask:    '+(h.mask||'—')+'\nGateway: '+(h.gw||'—')+(h.gw&&h.ip&&!sameNet(h.ip,h.gw,h.mask)?R(L(' (boshqa subnetda!)',' (other subnet!)')):'')+'\nDNS:     '+(h.dns||'—')}}
+ if(t==='router'){const o=NET.rIf[d.id];['G0/0','G0/1','WAN'].forEach(p=>{const f=o[p];s+=`${p.padEnd(5)} ${f.up?G('UP  '):R('DOWN')} ${f.ip?f.ip+'/'+f.mask:Y(L('IP yo‘q','no IP'))}${p==='WAN'&&f.ip?' gw '+f.gw:''}\n`});
+  s+=L('Internet: ','Internet: ')+(routerNet(d)?G(L('bor ✓','yes ✓')):R(L('yo‘q','no')))+'  NAT: '+(d.cfg.nat?G('ON'):R('OFF'));
+  ['G0/0','G0/1'].forEach(p=>{const n=Object.values(NET.hIf).filter(h=>h.src==='dhcp'&&o[p].seg&&h.seg===o[p].seg).length;if(d.cfg.dhcp[p].on)s+=`\nDHCP ${p}: ${n} ${L('ta mijozga IP berildi','leases')}`});
+  $$('[data-up]').forEach(x=>{x.className='dot '+(o[x.dataset.up].up?'g':'r')})}
+ if(t==='ap'){const up=linksOf(d.id).some(l=>NET.up[l.id]);const cl=Object.entries(NET.assoc).filter(([,a])=>a===d.id).map(([l])=>dev(l).name);
+  s+='Uplink: '+(up?G('UP ✓'):R(L('ulanmagan','not connected')))+'\n'+L('Xavfsizlik: ','Security: ')+(d.cfg.pass.length>=8?G('WPA2-PSK'):R(L('parol kamida 8 belgi bo‘lsin','password must be 8+ chars')))+'\n'+L('Mijozlar: ','Clients: ')+(cl.length?cl.join(', '):'—')}
+ if(['switch','modem','isp'].includes(t)){s=PORTS[t].map(([p])=>{const l=portLink(d.id,p);if(!l)return`${p.padEnd(6)} —`;const o=other(l,d.id);return`${p.padEnd(6)} ${NET.up[l.id]?G('UP  '):R('DOWN')} → ${dev(o.d).name} ${o.p}`}).join('\n');if(t==='modem'){const pon=portLink(d.id,'PON');s+='\n\nPON: '+(pon&&NET.up[pon.id]?G(L('signal bor ✓','signal ✓')):R('LOS — '+L('optik signal yo‘q','no fibre signal')))}}
+ el.innerHTML=s}
+
+/* ---------- terminal ---------- */
+let TERM={};
+function tbuf(id){return TERM[id]=TERM[id]||{lines:[{t:'Microsoft Windows [Version 10.0.19045]\n(c) Microsoft Corporation. All rights reserved.\n',c:'c'}],hist:[],hi:0,busy:false}}
+function renderTerm(b){const d=dev(SEL);const T=tbuf(d.id);const h=NET.hIf[d.id];
+ b.innerHTML=`<div class="qk">${['ipconfig','ipconfig /all','ipconfig /renew',h&&h.gw?'ping '+h.gw:'ping 192.168.1.1','ping 8.8.8.8','ping google.com','tracert google.com','nslookup google.com','arp -a','cls'].map(c=>`<button data-c="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+ <div class="term"><div class="tout" id="tout"></div><div class="tin"><span>C:\\Users\\${esc(d.name)}&gt;</span><input id="tcmd" autocomplete="off" spellcheck="false" placeholder="${L('buyruq yozing… (help)','type a command… (help)')}"></div></div>`;
+ const out=$('#tout');out.innerHTML=T.lines.map(l=>`<span class="${l.c||''}">${esc(l.t)}</span>`).join('\n');out.scrollTop=out.scrollHeight;
+ const inp=$('#tcmd');inp.focus();
+ inp.addEventListener('keydown',e=>{if(e.key==='Enter'){run(d,inp.value);inp.value=''}else if(e.key==='ArrowUp'){if(T.hist.length){T.hi=Math.max(0,T.hi-1);inp.value=T.hist[T.hi]||''}e.preventDefault()}else if(e.key==='ArrowDown'){T.hi=Math.min(T.hist.length,T.hi+1);inp.value=T.hist[T.hi]||''}});
+ $$('.qk button',b).forEach(x=>x.onclick=()=>run(d,x.dataset.c))}
+function tp(d,t,c){const T=tbuf(d.id);T.lines.push({t,c});if(T.lines.length>400)T.lines.splice(0,100);const o=$('#tout');if(o&&SEL===d.id&&TAB==='term'){o.insertAdjacentHTML('beforeend','\n'+`<span class="${c||''}">${esc(t)}</span>`);o.scrollTop=o.scrollHeight}}
+async function run(d,raw){const T=tbuf(d.id);const cmd=raw.trim();if(T.busy)return;tp(d,`C:\\Users\\${d.name}>${cmd}`,'c');if(!cmd)return;T.hist.push(cmd);T.hi=T.hist.length;
+ const a=cmd.split(/\s+/),c0=a[0].toLowerCase(),arg=(a[1]||'').toLowerCase();T.busy=true;
+ try{NET=compute();
+ if(c0==='cls'){T.lines=[];renderTerm($('#sbody'))}
+ else if(c0==='help')tp(d,'ipconfig [/all|/release|/renew]  ping <host>  tracert <host>  nslookup <name>  arp -a  hostname  cls');
+ else if(c0==='hostname')tp(d,d.name);
+ else if(c0==='ipconfig'){if(arg==='/release'){if(d.cfg.mode!=='dhcp')tp(d,'The operation failed as no adapter is in the state permissible for this operation.','bad');else{d.cfg.released=true;changed();tp(d,ipcfg(d,false))}}
+  else if(arg==='/renew'){if(d.cfg.mode!=='dhcp')tp(d,`DHCP is not enabled on adapter ${NET.hIf[d.id].ad==='wifi'?'Wi-Fi':'Ethernet'}.`,'bad');else{d.cfg.released=false;changed();await sleep(700);const h=NET.hIf[d.id];if(!h.media)tp(d,'No operation can be performed on Ethernet while it has its media disconnected.','bad');else if(h.src!=='dhcp')tp(d,'An error occurred while renewing interface Ethernet : unable to contact your DHCP server. Request has timed out.','bad');tp(d,ipcfg(d,false))}}
+  else tp(d,ipcfg(d,arg==='/all'));ST.events.push({kind:'ipconfig',from:d.id})}
+ else if(c0==='ping'&&a[1])await doPing(d,a[1]);
+ else if(c0==='tracert'&&a[1])await doTrace(d,a[1]);
+ else if(c0==='nslookup'&&a[1]){const h=NET.hIf[d.id];const r=resolve(d,a[1]);await sleep(300);
+  if(r.err==='nodns')tp(d,'*** Default servers are not available\nServer:  UnKnown\nAddress:  127.0.0.1','bad');
+  else if(r.err==='dnstimeout')tp(d,`DNS request timed out.\n    timeout was 2 seconds.\nServer:  UnKnown\nAddress:  ${r.dns}\n\n*** Request to UnKnown timed-out`,'bad');
+  else if(r.err==='nx')tp(d,`Server:  ${r.srv}\nAddress:  ${r.dns}\n\n*** ${r.srv} can't find ${a[1]}: Non-existent domain`,'bad');
+  else{tp(d,`Server:  ${r.srv||'UnKnown'}\nAddress:  ${h.dns}\n\n${r.srv&&dev(SEL)?'Non-authoritative answer:\n':''}Name:    ${a[1]}\nAddress:  ${r.ip}`,'ok');ST.events.push({kind:'nslookup',from:d.id,ok:true,name:a[1].toLowerCase(),dst:r.ip})}}
+ else if(c0==='arp'){const h=NET.hIf[d.id];if(!h||!h.ip){tp(d,'No ARP Entries Found.');ST.events.push({kind:'arp',from:d.id,n:0})}else{const ms=(NET.members[h.seg]||[]).filter(m=>!(m.kind==='host'&&m.dev===d.id)&&sameNet(m.ip,h.ip,h.mask));
+  tp(d,`\nInterface: ${h.ip} --- 0xb\n  Internet Address      Physical Address      Type\n`+ms.map(m=>`  ${m.ip.padEnd(22)}${macOf(m.dev,m.port?m.port.length:0).padEnd(22)}dynamic`).join('\n')+`\n  ${n2ip((ip2n(h.ip)|(~ip2n(h.mask)))>>>0).padEnd(22)}ff-ff-ff-ff-ff-ff     static`);ST.events.push({kind:'arp',from:d.id,n:ms.length})}}
+ else tp(d,`'${a[0]}' is not recognized as an internal or external command,\noperable program or batch file.`,'bad');
+ }finally{T.busy=false;afterCmd()}}
+function afterCmd(){NET=compute();drawCv();if(TAB==='cfg')live();const sb=$('#sbody');if(TAB==='task')renderSide();else{const tb=$('#sbody');}refreshTaskQuiet()}
+function refreshTaskQuiet(){if(MODE==='lab'){const M=LABS[CUR.lab];if(M.steps.every(s=>s[2]||s[1]())&&!RES.labs[M.id]){RES.labs[M.id]={t:Math.round((Date.now()-STARTED)/1000),at:Date.now()};saveRes();report({type:'lab',code:M.id,title:LL(M.t),score:100,t:RES.labs[M.id].t,hints:HINTS});toast('🎉 '+L('Vazifa bajarildi! “Vazifa” bo‘limiga qarang.','Task complete! See the Task tab.'),5000)}}
+ if(MODE==='trouble'){const C=TRS[CUR.trouble];if(C.done()&&!RES.tr[C.id]&&!TRBUSY){TRBUSY=true;setTimeout(()=>causeQuiz(C),900)}}renderTabs()}
+function ipcfg(d,all){const h=NET.hIf[d.id];const c=d.cfg;const L2=[];L2.push('','Windows IP Configuration','');
+ if(all)L2.push(`   Host Name . . . . . . . . . . . . : ${d.name}`,'   Node Type . . . . . . . . . . . . : Hybrid','');
+ const ad=(name,act,mac)=>{L2.push(`${name}:`,'');if(!act){L2.push('   Media State . . . . . . . . . . . : Media disconnected','   Connection-specific DNS Suffix  . :','');return}
+  if(all)L2.push(`   Physical Address. . . . . . . . . : ${mac.toUpperCase()}`,`   DHCP Enabled. . . . . . . . . . . : ${c.mode==='dhcp'?'Yes':'No'}`);
+  if(h.src==='apipa')L2.push(`   Autoconfiguration IPv4 Address. . : ${h.ip}${all?'(Preferred)':''}`,`   Subnet Mask . . . . . . . . . . . : ${h.mask}`,'   Default Gateway . . . . . . . . . :');
+  else if(h.ip)L2.push(`   IPv4 Address. . . . . . . . . . . : ${h.ip}${h.dup?'(Duplicate)':all?'(Preferred)':''}`,`   Subnet Mask . . . . . . . . . . . : ${h.mask}`,`   Default Gateway . . . . . . . . . : ${h.gw}`);
+  else L2.push('   IPv4 Address. . . . . . . . . . . : 0.0.0.0','   Subnet Mask . . . . . . . . . . . : 0.0.0.0','   Default Gateway . . . . . . . . . :');
+  if(all){if(h.src==='dhcp')L2.push(`   DHCP Server . . . . . . . . . . . : ${h.srv}`);L2.push(`   DNS Servers . . . . . . . . . . . : ${h.dns||''}`)}L2.push('')};
+ ad('Ethernet adapter Ethernet',h.media&&h.ad==='eth',macOf(d.id));
+ if(d.type==='laptop')ad('Wireless LAN adapter Wi-Fi',h.media&&h.ad==='wifi',macOf(d.id,3));
+ return L2.join('\n')}
+async function anim(ids,col,fail){const g=$('#anim');if(!g)return;const pts=ids.map(dev).filter(Boolean).map(d=>[d.x,d.y]);if(!pts.length)return;
+ const c=S('circle',{r:9,fill:col,stroke:'#fff','stroke-width':2,cx:pts[0][0],cy:pts[0][1]},g);
+ for(let i=0;i<pts.length-1;i++){const[a,b]=[pts[i],pts[i+1]];const t0=performance.now(),dur=Math.max(220,Math.hypot(b[0]-a[0],b[1]-a[1])*1.1);
+  await new Promise(r=>{const f=n=>{const p=Math.min(1,(n-t0)/dur);c.setAttribute('cx',a[0]+(b[0]-a[0])*p);c.setAttribute('cy',a[1]+(b[1]-a[1])*p);if(p<1)requestAnimationFrame(f);else r()};requestAnimationFrame(f)})}
+ if(fail){const[x,y]=pts[pts.length-1];const t=S('text',{x,y:y-30,'text-anchor':'middle',fill:'#ff5f5f','font-size':30,'font-weight':700},g);t.textContent='✗';await sleep(700);t.remove()}c.remove()}
+async function doPing(d,q){const r0=resolve(d,q);const name=validIP(q)||/^127\./.test(q)?null:q.toLowerCase();
+ if(!r0.ip){await sleep(500);tp(d,`Ping request could not find host ${q}. Please check the name and try again.`,'bad');ST.events.push({kind:'ping',from:d.id,ok:false,name});return}
+ const ip=r0.ip;const r=ping(d,ip);tp(d,`\nPinging ${name?name+' ['+ip+']':ip} with 32 bytes of data:`);
+ if(r.self){for(let i=0;i<4;i++){await sleep(250);tp(d,`Reply from ${ip}: bytes=32 time<1ms TTL=128`,'ok')}}
+ else{const back=r.ok;anim(r.path,'#f28b3c',!back&&r.path.length>0).then(()=>{if(back)anim(r.path.slice().reverse(),'#3dd598')});
+  const tgt=r.target;const inet=tgt&&tgt.kind==='inet';const ttl=inet?117:tgt&&tgt.kind==='router'?255:128;const rt=inet?18:r.hops.length>1?1:0;
+  for(let i=0;i<4;i++){await sleep(i?650:900);
+   if(r.ok)tp(d,`Reply from ${ip}: bytes=32 time${rt?'='+(rt+((i*7)%5))+'ms':'<1ms'} TTL=${ttl}`,'ok');
+   else if(r.err==='general')tp(d,'PING: transmit failed. General failure.','bad');
+   else if(r.err==='unreach')tp(d,`Reply from ${r.src}: Destination host unreachable.`,'bad');
+   else if(r.err==='netunreach')tp(d,`Reply from ${r.errFrom}: Destination net unreachable.`,'bad');
+   else tp(d,'Request timed out.','bad')}}
+ const rec=r.ok||r.err==='unreach'||r.err==='netunreach'?4:0;const ok=r.ok;
+ tp(d,`\nPing statistics for ${ip}:\n    Packets: Sent = 4, Received = ${ok?4:r.err==='general'||r.err==='timeout'?0:rec}, Lost = ${ok?0:r.err==='general'||r.err==='timeout'?4:0} (${ok?0:r.err==='general'||r.err==='timeout'?100:0}% loss),`);
+ ST.events.push({kind:'ping',from:d.id,ok,dst:ip,name,inet:!!(r.target&&r.target.kind==='inet'),tdev:r.target&&r.target.dev?r.target.dev:null,self:!!r.self})}
+async function doTrace(d,q){const r0=resolve(d,q);const name=validIP(q)?null:q.toLowerCase();
+ if(!r0.ip){await sleep(400);tp(d,`Unable to resolve target system name ${q}.`,'bad');return}const ip=r0.ip;const r=ping(d,ip);
+ tp(d,`\nTracing route to ${name?name+' ['+ip+']':ip}\nover a maximum of 30 hops:\n`);anim(r.path,'#f28b3c',!r.ok);
+ const hops=r.self?[ip]:r.hops.slice();let n=0;
+ for(const hp of hops){n++;await sleep(450);const t=hp==='*core*'?'core1.isp.uz [195.158.0.1]':hp;const ms=hp==='*core*'?'  9 ms     8 ms     9 ms':hp===ip&&r.target&&r.target.kind==='inet'?' 18 ms    17 ms    18 ms':'<1 ms    <1 ms    <1 ms';
+  if(hp===ip&&!r.ok)break;tp(d,`  ${String(n).padStart(2)}    ${ms}  ${t}`,r.ok&&hp===ip?'ok':'')}
+ if(!r.ok){for(let k=0;k<3;k++){await sleep(500);tp(d,`  ${String(++n).padStart(2)}     *        *        *     Request timed out.`,'bad')}tp(d,'\nTrace incomplete.','bad')}else tp(d,'\nTrace complete.','ok');
+ ST.events.push({kind:'tracert',from:d.id,ok:r.ok,dst:ip,name,inet:!!(r.target&&r.target.kind==='inet'),tdev:r.target&&r.target.dev?r.target.dev:null,hops:r.hops.length})}
+
+/* ===================== RJ-45 crimping workshop ===================== */
+const WIRE={wo:['Oq-to‘q sariq','White-orange','#f28b3c',1],o:['To‘q sariq','Orange','#f28b3c',0],wg:['Oq-yashil','White-green','#2fa65a',1],g:['Yashil','Green','#2fa65a',0],wb:['Oq-ko‘k','White-blue','#2f62c9',1],bl:['Ko‘k','Blue','#2f62c9',0],wbr:['Oq-jigarrang','White-brown','#8a5a35',1],br:['Jigarrang','Brown','#8a5a35',0]};
+const T568B=['wo','o','wg','bl','wb','g','wbr','br'],T568A=['wg','g','wo','bl','wb','o','wbr','br'];
+const TRAY=['br','wg','o','bl','wbr','g','wo','wb'];
+const wireCss=k=>{const w=WIRE[k];return w[3]?`repeating-linear-gradient(135deg,${w[2]} 0 5px,#f4f4ef 5px 10px)`:w[2]};
+const stdOf=a=>a.join()===T568B.join()?'B':a.join()===T568A.join()?'A':null;
+const cableType=(a,b)=>{const A=stdOf(a),B=stdOf(b);if(!A||!B)return'bad';return A===B?'straight':'cross'};
+function endErrs(arr){const da=arr.filter((w,i)=>w===T568A[i]).length,db=arr.filter((w,i)=>w===T568B[i]).length;const std=db>=da?T568B:T568A;return{name:db>=da?'T568B':'T568A',list:arr.map((w,i)=>w!==std[i]?{i,need:std[i],got:w}:null).filter(Boolean)}}
+let INV=[];try{INV=JSON.parse(localStorage.getItem('netlab-inv')||'[]')}catch(e){}
+const saveInv=()=>{try{localStorage.setItem('netlab-inv',JSON.stringify(INV))}catch(e){}};
+const homeItem=()=>CABLE.startsWith('home:')?INV.find(c=>c.id===CABLE.slice(5)):null;
+const curType=()=>{const h=homeItem();return h?h.type:(CABLES[CABLE]?CABLE:'straight')};
+const typeLab=t=>t==='straight'?'Straight':t==='cross'?'Crossover':L('Noto‘g‘ri','Faulty');
+function cableVerdict(a,b){const t=cableType(a,b);
+ if(t==='straight')return{t,ok:true,h:L(`✓ <b>Straight-through</b> kabel (${stdOf(a)==='B'?'T568B – T568B':'T568A – T568A'}). Tester: 1→1, 2→2 … 8→8. Turli guruh qurilmalari uchun: PC/router/AP ↔ switch, router WAN ↔ modem.`,`✓ <b>Straight-through</b> cable (${stdOf(a)==='B'?'T568B – T568B':'T568A – T568A'}). Tester: 1→1 … 8→8. For unlike devices: PC/router/AP ↔ switch, router WAN ↔ modem.`)};
+ if(t==='cross')return{t,ok:true,h:L('✓ <b>Crossover</b> kabel (T568A – T568B). Tester: 1→3, 2→6, 3→1, 6→2 — uzatish (TX) juftligi qabul (RX) juftligiga keladi. Bir xil guruh qurilmalari uchun: PC↔PC, switch↔switch, PC↔router.','✓ <b>Crossover</b> cable (T568A – T568B). Tester: 1→3, 2→6, 3→1, 6→2 — the transmit pair lands on the receive pair. For like devices: PC↔PC, switch↔switch, PC↔router.')};
+ let h='✗ <b>'+L('Kabel noto‘g‘ri yasalgan — u ishlamaydi.','The cable is mis-wired — it won’t work.')+'</b>';
+ if(a.join()===b.join())h+=' '+L('Ikki uch bir xil, lekin standart tartibda emas: juftliklar ajralib ketadi (split pair). Tester “o‘tadi”, ammo shovqin tufayli tarmoq ishlamaydi.','Both ends match but follow no standard: the pairs are split. A basic tester passes, but crosstalk kills the link.');
+ [['a',a],['b',b]].forEach(([s,arr])=>{if(stdOf(arr))return;const e=endErrs(arr);h+=`<br><b>${s==='a'?L('A uchi','End A'):L('B uchi','End B')}</b> (${L('eng yaqini','closest')} ${e.name}): `+e.list.map(x=>`${L('pin','pin')} ${x.i+1} — ${L('kerak','need')} <i>${esc(LL(WIRE[x.need]))}</i>, ${L('sizda','you have')} <i>${esc(LL(WIRE[x.got]))}</i>`).join('; ')});
+ return{t,ok:false,h}}
+function testerSvg(a,b){let s=`<svg viewBox="0 0 620 170" style="width:100%;max-width:640px;display:block;margin:auto"><rect x="4" y="4" width="612" height="40" rx="8" fill="#1d2433" stroke="#93a4bd"/><rect x="4" y="126" width="612" height="40" rx="8" fill="#1d2433" stroke="#93a4bd"/>
+ <text x="14" y="19" fill="#93a4bd" font-size="11" font-family="IBM Plex Mono">MASTER</text><text x="14" y="141" fill="#93a4bd" font-size="11" font-family="IBM Plex Mono">REMOTE</text>`;
+ const X=i=>96+i*68;
+ a.forEach((w,i)=>{const j=b.indexOf(w);const d=(i*.35).toFixed(2);
+  if(j>=0){s+=`<g class="tl" style="animation-delay:${d}s"><line x1="${X(i)}" y1="34" x2="${X(j)}" y2="136" stroke="${WIRE[w][2]}" stroke-width="5" stroke-linecap="round"/>${WIRE[w][3]?`<line x1="${X(i)}" y1="34" x2="${X(j)}" y2="136" stroke="#f4f4ef" stroke-width="5" stroke-dasharray="5 6"/>`:''}</g>`}});
+ for(let i=0;i<8;i++){const j=b.indexOf(a[i]);const d=(i*.35).toFixed(2);
+  s+=`<circle cx="${X(i)}" cy="26" r="8" fill="#2b2f36" stroke="#5d6f8a"/><circle class="tl" style="animation-delay:${d}s" cx="${X(i)}" cy="26" r="9" fill="#3dd598"/><text x="${X(i)}" y="30" text-anchor="middle" fill="#e9eff8" font-size="11" font-weight="700" font-family="IBM Plex Mono" style="paint-order:stroke;stroke:#0b1322;stroke-width:3px">${i+1}</text>`;
+  s+=`<circle cx="${X(i)}" cy="146" r="9" fill="#2b2f36" stroke="#5d6f8a"/>`;
+  if(j>=0)s+=`<circle class="tl" style="animation-delay:${d}s" cx="${X(j)}" cy="146" r="9" fill="${j===i?'#3dd598':'#e8c35a'}"/>`}
+ for(let i=0;i<8;i++)s+=`<text x="${X(i)}" y="150" text-anchor="middle" fill="#e9eff8" font-size="11" font-weight="700" font-family="IBM Plex Mono" style="paint-order:stroke;stroke:#0b1322;stroke-width:3px">${i+1}</text>`;
+ return s+'</svg>'}
+let CR=null;
+function crimpOpen(){CR={a:Array(8).fill(null),b:Array(8).fill(null),side:'a',slot:null,ref:false,used:false,res:null};crimpDraw()}
+function refTables(){const row=(nm,arr)=>`<tr><th>${nm}</th>${arr.map(w=>`<td><i class="sw" style="background:${wireCss(w)}"></i><small>${esc(LL(WIRE[w]))}</small></td>`).join('')}</tr>`;
+ return`<table class="reftab"><tr><th></th>${[1,2,3,4,5,6,7,8].map(i=>`<th>${i}</th>`).join('')}</tr>${row('T568B',T568B)}${row('T568A',T568A)}</table>
+ <div class="muted" style="font-size:13px;line-height:1.5">${L('Eslab qolish: T568A — bu T568B da <b>to‘q sariq</b> va <b>yashil</b> juftlarning o‘rni almashgani (1↔3, 2↔6). Ko‘k (4–5) va jigarrang (7–8) joyida qoladi. Fast Ethernet’da 1-2 — uzatish (TX), 3-6 — qabul (RX); Gigabit to‘rtala juftni ishlatadi.','Tip: T568A is T568B with the <b>orange</b> and <b>green</b> pairs swapped (1↔3, 2↔6). Blue (4–5) and brown (7–8) stay. Fast Ethernet: 1-2 transmit (TX), 3-6 receive (RX); Gigabit uses all four pairs.')}</div>`}
+function crimpDraw(){const c=CR;const badge=s=>{if(!c.res)return'';const st=stdOf(c[s]);return st?`<span class="bdg ok">T568${st} ✓</span>`:`<span class="bdg no">✗</span>`};
+ const end=s=>`<div class="rjend ${c.side===s?'on':''}" data-side="${s}"><div class="rjt">${s==='a'?L('A uchi','End A'):L('B uchi','End B')} ${badge(s)}<span class="sp"></span><button class="btn ghost" style="padding:3px 9px;font-size:12px" data-clr="${s}">${L('Tozalash','Clear')}</button></div>
+  <div class="rj"><div class="rjbody">${c[s].map((w,i)=>`<button class="pin ${w?'f':''} ${c.side===s&&c.slot===i?'focus':''}" data-s="${s}" data-i="${i}" style="${w?'background:'+wireCss(w):''}" title="${w?esc(LL(WIRE[w])):''}"></button>`).join('')}</div></div>
+  <div class="rjnums">${c[s].map((w,i)=>`<span>${i+1}</span>`).join('')}</div>
+  <div class="rjjacket"></div>
+  <div class="rjlist">${c[s].map((w,i)=>`<span><b>${i+1}</b> ${w?esc(LL(WIRE[w])):'—'}</span>`).join('')}</div></div>`;
+ const usedHere=c[c.side];
+ modal(`<div class="row"><h2 style="flex:1">🔧 ${L('Kabel ustaxonasi — RJ-45','Cable workshop — RJ-45')}</h2><button class="btn ghost" id="crX">✕</button></div>
+  <p class="muted" style="margin:0;line-height:1.5;font-size:14px">${L('UTP kabelning ikkala uchiga RJ-45 konnektor kiydiring. Konnektor <b>qulfi (klipsi) pastda</b>, mis kontaktlar sizga qaragan — pinlar <b>chapdan o‘ngga 1 → 8</b>. Uchni tanlang, so‘ng simlarni tartib bilan bosing: har biri navbatdagi bo‘sh pinga tushadi. Pinni bosish — simni olib tashlash.','Put an RJ-45 plug on both ends. Hold the plug <b>clip down</b>, contacts facing you — pins run <b>1 → 8 left to right</b>. Pick an end, then click the wires in order: each drops into the next empty pin. Click a pin to remove its wire.')}</p>
+  <div class="cr2">${end('a')}${end('b')}</div>
+  <div><div class="plbl">${L('Simlar','Wires')} → ${c.side==='a'?L('A uchi','End A'):L('B uchi','End B')}</div><div class="tray">${TRAY.map(w=>`<button class="wire" data-w="${w}" ${usedHere.includes(w)?'disabled':''}><i style="background:${wireCss(w)}"></i>${esc(LL(WIRE[w]))}</button>`).join('')}</div></div>
+  <div class="row"><button class="btn ghost" id="crRef">📋 ${c.ref?L('Jadvalni yashirish','Hide chart'):L('T568A / T568B jadvali','T568A / T568B chart')}</button>${c.used?`<span class="muted" style="font-size:12.5px">${L('jadvaldan foydalanildi','chart used')}</span>`:''}<span class="sp"></span><button class="btn or" id="crGo">✂ ${L('Siqish va testerda tekshirish','Crimp and test')}</button></div>
+  <div id="crRefBox" ${c.ref?'':'hidden'}>${refTables()}</div>
+  <div id="crOut">${c.res?c.res:''}</div>`,'wide');
+ const mb=$('.mbox');
+ $('#crX').onclick=()=>{closeModal();renderPal()};
+ $$('.rjend',mb).forEach(e=>e.addEventListener('click',ev=>{if(ev.target.closest('button'))return;if(c.side!==e.dataset.side){c.side=e.dataset.side;c.slot=null;crimpDraw()}}));
+ $$('.pin',mb).forEach(p=>p.onclick=()=>{const s=p.dataset.s,i=+p.dataset.i;c.side=s;c.res=null;if(c[s][i]){c[s][i]=null;c.slot=i}else c.slot=c.slot===i?null:i;crimpDraw()});
+ $$('[data-clr]',mb).forEach(b=>b.onclick=()=>{c[b.dataset.clr]=Array(8).fill(null);c.side=b.dataset.clr;c.slot=null;c.res=null;crimpDraw()});
+ $$('.wire',mb).forEach(b=>b.onclick=()=>{const arr=c[c.side];let i=c.slot!=null&&!arr[c.slot]?c.slot:arr.indexOf(null);if(i<0)return;const prev=arr.indexOf(b.dataset.w);if(prev>=0)arr[prev]=null;arr[i]=b.dataset.w;c.slot=null;c.res=null;
+  if(!arr.includes(null)&&c[c.side==='a'?'b':'a'].every(x=>!x))c.side=c.side==='a'?'b':'a';crimpDraw()});
+ $('#crRef').onclick=()=>{c.ref=!c.ref;if(c.ref)c.used=true;crimpDraw()};
+ $('#crGo').onclick=()=>{if(c.a.includes(null)||c.b.includes(null)){$('#crOut').innerHTML=`<div class="hintbox">${L('Ikkala uchdagi barcha 8 ta pinni to‘ldiring.','Fill all 8 pins on both ends.')}</div>`;return}
+  const v=cableVerdict(c.a,c.b);const n=INV.length+1;const it={id:'h'+Date.now().toString(36),name:'#'+n,type:v.t,a:c.a.slice(),b:c.b.slice(),ref:c.used,at:Date.now()};INV.push(it);saveInv();report({type:'cable',code:L('Kabel ','Cable ')+it.name,title:typeLab(v.t)+' ('+(stdOf(it.a)||'?')+'–'+(stdOf(it.b)||'?')+')',score:v.ok?1:0,hints:it.ref?L('jadval bilan','with chart'):L('jadvalsiz','no chart')});
+  c.res=`<div class="card" style="background:#0b1322;border-color:#243450">${testerSvg(c.a,c.b)}</div><div class="${v.ok?'win':'hintbox'}" style="${v.ok?'':'border-color:var(--red)'}">${v.h}<div style="margin-top:6px;font-size:13px" class="muted">${L('Inventarga qo‘shildi','Added to inventory')}: <b>🛠 ${L('Kabel','Cable')} ${it.name} · ${typeLab(v.t)}</b>${it.ref?'':' · '+L('jadvalsiz ⭐','without chart ⭐')}</div></div>
+   <div class="row"><button class="btn gr" id="crUse">${L('Shu kabel bilan ulash →','Connect with this cable →')}</button><button class="btn ghost" id="crNew">${L('Yangi kabel','New cable')}</button></div>`;
+  crimpDraw();$('#crUse').onclick=()=>{CABLE='home:'+it.id;TOOL='cable';PEND=null;closeModal();renderPal();drawCv();hint();toast(L('Kabel tanlandi — endi ikki qurilmani bosing.','Cable selected — now click two devices.'))};
+  $('#crNew').onclick=()=>crimpOpen();changed(true)}}
+function openTester(l){const v=cableVerdict(l.wires.a,l.wires.b);
+ modal(`<div class="row"><h2 style="flex:1">🧪 ${L('Kabel tester','Cable tester')}</h2><button class="btn ghost" id="tX">✕</button></div>
+  <p style="margin:0">🛠 <b>${esc(l.hname||'')}</b> · ${dev(l.a.d).name} ${l.a.p} ↔ ${dev(l.b.d).name} ${l.b.p}</p>
+  <div class="card" style="background:#0b1322;border-color:#243450">${testerSvg(l.wires.a,l.wires.b)}</div>
+  <div class="cr2">${['a','b'].map(s=>`<div class="card"><b>${s==='a'?L('A uchi','End A'):L('B uchi','End B')}</b> ${stdOf(l.wires[s])?`<span class="bdg ok">T568${stdOf(l.wires[s])}</span>`:'<span class="bdg no">✗</span>'}<div class="swrow">${l.wires[s].map((w,i)=>`<span title="${esc(LL(WIRE[w]))}"><i class="sw" style="background:${wireCss(w)}"></i>${i+1}</span>`).join('')}</div></div>`).join('')}</div>
+  <div class="${v.ok?'win':'hintbox'}" style="${v.ok?'':'border-color:var(--red)'}">${v.h}${v.ok&&!linkUp(l)?'<br>'+linkReason(l):''}</div>
+  <p class="muted" style="margin:0;font-size:13px">${L('Almashtirish: 🗑 O‘chirish asbobi bilan kabelni oling, 🔧 Kabel ustaxonasida yangisini yasang va qayta ulang.','To replace: remove the cable with 🗑 Delete, make a new one in 🔧 the workshop and reconnect.')}</p>`,'wide');$('#tX').onclick=closeModal}
+
+
+/* ===================== Google Sheets ===================== */
+const sheetUrl=()=>{let u=SHEET_URL;try{u=localStorage.getItem('netlab-sheet')||u}catch(e){}return u||''};
+const devId=(()=>{let id='';try{id=localStorage.getItem('netlab-dev')||''}catch(e){}if(!id){id='PC-'+Math.random().toString(36).slice(2,7).toUpperCase();try{localStorage.setItem('netlab-dev',id)}catch(e){}}return id})();
+function totals(){return{labs:Object.keys(RES.labs).length,labsMax:LABS.length,faults:TRS.reduce((a,c)=>a+(RES.tr[c.id]?RES.tr[c.id].score:0),0),faultsDone:Object.keys(RES.tr).length,faultsMax:TRS.length,cables:INV.length,cablesOk:INV.filter(c=>c.type!=='bad').length,cablesNoRef:INV.filter(c=>c.type!=='bad'&&!c.ref).length}}
+async function postRow(row,url){await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(row)})}
+let Q=[];try{Q=JSON.parse(localStorage.getItem('netlab-q')||'[]')}catch(e){}
+const saveQ=()=>{try{localStorage.setItem('netlab-q',JSON.stringify(Q))}catch(e){}};
+async function flushQ(){const u=sheetUrl();if(!u||!Q.length)return;const rest=[];for(const r of Q){try{await postRow(r,u)}catch(e){rest.push(r)}}Q=rest;saveQ()}
+function report(o){const u=sheetUrl();const row=Object.assign({name:RES.name||'',grp:RES.grp||'',dev:devId,at:new Date().toISOString(),totals:totals(),code:'',title:'',score:'',t:'',hints:'',cause:''},o);
+ if(!u)return;Q.push(row);saveQ();flushQ()}
+function sheetPanel(){const u=sheetUrl();return`<details class="card noprint" ${u?'':'open'}><summary style="cursor:pointer;font-weight:600">⚙ ${L('Ustoz: Google Sheets bilan bog‘lash','Teacher: connect Google Sheets')} — ${u?`<span style="color:var(--green)">${L('ulangan ✓','connected ✓')}</span>`:`<span class="muted">${L('ulanmagan','not connected')}</span>`}</summary>
+ <p class="muted" style="font-size:13px;line-height:1.5">${L('Apps Script veb-ilova manzilini (…/exec) qo‘ying. “Sinash” jadvalga test qatori yuboradi. “Sozlangan faylni yuklab olish” manzil ichiga yozilgan nusxani beradi — uni talabalarga tarqating.','Paste the Apps Script web app URL (…/exec). “Test” sends a test row. “Download configured file” gives a copy with the URL built in — hand that to students.')}</p>
+ <div class="row"><input class="mini" id="shUrl" style="flex:1;min-width:260px" placeholder="https://script.google.com/macros/s/…/exec" value="${esc(u)}"></div>
+ <div class="row" style="margin-top:8px"><button class="btn ghost" id="shTest">${L('Sinash','Test')}</button><button class="btn ghost" id="shSave">${L('Shu kompyuterda saqlash','Save on this computer')}</button><button class="btn" id="shDl">⬇ ${L('Sozlangan faylni yuklab olish','Download configured file')}</button></div><div id="shMsg" class="muted" style="font-size:13px;margin-top:6px"></div></details>`}
+function bindSheetPanel(){const ok=v=>/^https:\/\/script\.google(usercontent)?\.com\/.+/.test(v);const msg=t=>$('#shMsg').innerHTML=t;
+ $('#shSave').onclick=()=>{const v=$('#shUrl').value.trim();if(v&&!ok(v)){msg(L('Manzil https://script.google.com/… bilan boshlanishi kerak.','The URL must start with https://script.google.com/…'));return}try{if(v)localStorage.setItem('netlab-sheet',v);else localStorage.removeItem('netlab-sheet')}catch(e){}msg(v?L('Saqlandi ✓','Saved ✓'):L('O‘chirildi','Removed'));flushQ()};
+ $('#shTest').onclick=async()=>{const v=$('#shUrl').value.trim();if(!ok(v)){msg(L('Avval to‘g‘ri manzil qo‘ying.','Enter a valid URL first.'));return}msg(L('Yuborilyapti…','Sending…'));try{await postRow({type:'test',name:RES.name||'TEST',grp:RES.grp||'',dev:devId,at:new Date().toISOString(),code:'TEST',title:L('Ulanishni sinash','Connection test'),totals:totals()},v);msg(L('Yuborildi. Jadvalda “TEST” qatori paydo bo‘lganini tekshiring (5–10 soniya).','Sent. Check that a “TEST” row appears in the sheet (5–10 s).'))}catch(e){msg(L('Yuborib bo‘lmadi: internet aloqasini tekshiring.','Could not send: check the internet connection.'))}};
+ $('#shDl').onclick=()=>{const v=$('#shUrl').value.trim();if(!ok(v)){msg(L('Avval to‘g‘ri manzil qo‘ying.','Enter a valid URL first.'));return}
+  const src=__SRC.replace(/const SHEET_URL='[^']*';/,"const SHEET_URL='"+v.replace(/'/g,'')+"';");const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([src],{type:'text/html'}));a.download='Tarmoq_ustaxonasi_lab_sheets.html';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);msg(L('Fayl yuklab olindi ✓','File downloaded ✓'))}}
+
+/* ===================== top bar, modal, results ===================== */
+function modal(h,cls=''){$('#modalRoot').innerHTML=`<div class="modal"><div class="mbox ${cls}">${h}</div></div>`}
+function closeModal(){$('#modalRoot').innerHTML=''}
+function startModal(){modal(`<h2>🧪 ${L('Tarmoq ustaxonasi','Network workshop')}</h2><p class="muted" style="margin:0;line-height:1.5">${L('Laboratoriya mashg‘uloti: tarmoqni o‘zingiz yig‘asiz, sozlaysiz va buzilgan tarmoqlarni tuzatasiz. Natijangiz saqlanadi.','Lab session: build and configure networks yourself, then repair broken ones. Your results are saved.')}</p>
+ <div class="fld" style="grid-template-columns:130px 1fr"><label>${L('Ism, familiya','Full name')}</label><input id="stuName" value="${esc(RES.name)}" placeholder="${L('Masalan: Aliyev Vali','e.g. Ali Valiyev')}"><label>${L('Guruh','Group')}</label><input id="stuGrp" value="${esc(RES.grp||'')}" placeholder="KX-23-01"></div>
+ <div class="mcards"><button data-m="lab"><b>1 · ${L('Laboratoriya','Lab')}</b><span>${L('6 ta bosqichli vazifa: 2 PC dan Internet va Wi-Fi gacha','6 guided tasks: from 2 PCs to Internet and Wi-Fi')}</span></button><button data-m="trouble"><b>2 · ${L('Nosozliklar','Troubleshooting')}</b><span>${L('10 ta buzilgan tarmoq — topib tuzating, ball oling','10 broken networks — find, fix, score')}</span></button><button data-m="free"><b>3 · ${L('Erkin rejim','Free mode')}</b><span>${L('O‘z tarmog‘ingizni loyihalang','Design your own network')}</span></button></div>`);
+ $$('.mcards button').forEach(b=>b.onclick=()=>{RES.name=$('#stuName').value.trim();RES.grp=$('#stuGrp').value.trim();saveRes();closeModal();setMode(b.dataset.m);topbar()})}
+function results(){const labs=LABS.map((m,i)=>{const r=RES.labs[m.id];return`<tr><td>${i+1}. ${esc(LL(m.t))}</td><td>${r?'✓ '+fmtT(r.t):'—'}</td></tr>`}).join('');
+ const trs=TRS.map((c,i)=>{const r=RES.tr[c.id];return`<tr><td>${i+1}. ${esc(LL(c.t))}</td><td>${r?r.score+' · '+fmtT(r.t)+(r.cause?'':' · '+L('sabab ✗','cause ✗')):'—'}</td></tr>`}).join('');
+ const cm=INV.length,cok=INV.filter(c=>c.type!=='bad').length,cnr=INV.filter(c=>c.type!=='bad'&&!c.ref).length;const nl=Object.keys(RES.labs).length,ts=TRS.reduce((a,c)=>a+(RES.tr[c.id]?RES.tr[c.id].score:0),0);
+ modal(`${sheetPanel()}<div id="printArea"><h2>${L('Natijalar','Results')}</h2><p style="margin:6px 0"><b>${esc(RES.name||'—')}</b> ${RES.grp?'· '+esc(RES.grp):''} · ${new Date().toLocaleString()}</p>
+  <div class="row" style="gap:24px"><div><div class="muted">${L('Laboratoriya','Lab tasks')}</div><div class="big">${nl} / ${LABS.length}</div></div><div><div class="muted">${L('Nosozliklar bali','Troubleshooting score')}</div><div class="big">${ts} / ${TRS.length*100}</div></div><div><div class="muted">${L('Yasalgan kabellar','Cables made')}</div><div class="big">${cok} / ${cm}</div><div class="muted" style="font-size:12px">${L('jadvalsiz to‘g‘ri','correct w/o chart')}: ${cnr}</div></div></div>
+  <table class="rtab"><tr><th>${L('Laboratoriya vazifasi','Lab task')}</th><th>${L('Holat','Status')}</th></tr>${labs}</table>
+  <table class="rtab"><tr><th>${L('Nosozlik','Fault')}</th><th>${L('Ball · vaqt','Score · time')}</th></tr>${trs}</table>
+  <p class="muted" style="font-size:12px">${L('Tarmoq ustaxonasi · CompTIA A+ Helpdesk · Ustoz: Sabrina Bazarbaevna','Network workshop · CompTIA A+ Helpdesk · Instructor: Sabrina Bazarbaevna')}</p></div>
+  <div class="row noprint">${sheetUrl()?`<button class="btn gr" id="shSend">📤 ${L('Natijani jadvalga yuborish','Send results to the sheet')}</button>`:''}<button class="btn" id="cpy">📋 ${L('Nusxalash','Copy')}</button><button class="btn ghost" id="prt">🖨 ${L('Chop etish / PDF','Print / PDF')}</button><button class="btn ghost" id="rst">${L('Natijalarni tozalash','Reset results')}</button><span class="sp"></span><button class="btn ghost" id="cls">${L('Yopish','Close')}</button></div>`);
+ bindSheetPanel();if($('#shSend'))$('#shSend').onclick=()=>{if(!RES.name){toast(L('Avval ism-familiyangizni kiriting (👤 tugmasi).','Enter your name first (👤 button).'));return}report({type:'summary',code:'JAMI',title:L('Umumiy natija','Summary')});toast(L('Natija jadvalga yuborildi ✓','Results sent ✓'))};
+ $('#cls').onclick=closeModal;$('#prt').onclick=()=>window.print();
+ $('#cpy').onclick=()=>{const t=`${RES.name} ${RES.grp||''}\n${L('Laboratoriya','Lab')}: ${nl}/${LABS.length}\n`+LABS.map((m,i)=>`${i+1}. ${LL(m.t)}: ${RES.labs[m.id]?'OK '+fmtT(RES.labs[m.id].t):'-'}`).join('\n')+`\n${L('Kabellar','Cables')}: ${cok}/${cm} (${L('jadvalsiz','no chart')} ${cnr})\n${L('Nosozliklar','Faults')}: ${ts}/${TRS.length*100}\n`+TRS.map((c,i)=>`${i+1}. ${LL(c.t)}: ${RES.tr[c.id]?RES.tr[c.id].score:'-'}`).join('\n');try{navigator.clipboard.writeText(t);toast(L('Nusxalandi ✓','Copied ✓'))}catch(e){toast(L('Nusxalab bo‘lmadi','Copy failed'))}};
+ $('#rst').onclick=()=>{if(confirm(L('Barcha natijalar o‘chirilsinmi?','Delete all results?'))){RES.labs={};RES.tr={};saveRes();results();renderSide()}}}
+function topbar(){$('#ttl').textContent=L('Tarmoq ustaxonasi','Network workshop');$('#teacher').innerHTML=`${L('Ustoz','Instructor')}: <b>Sabrina Bazarbaevna</b>`;
+ $('#modeSeg').innerHTML=[['lab',L('Laboratoriya','Lab')],['trouble',L('Nosozliklar','Troubleshooting')],['free',L('Erkin','Free')]].map(([k,t])=>`<button data-m="${k}" class="${MODE===k?'on':''}">${t}</button>`).join('');
+ $$('#modeSeg button').forEach(b=>b.onclick=()=>{setMode(b.dataset.m);topbar()});
+ $('#stuBtn').innerHTML='👤 '+esc(RES.name||L('Talaba','Student'));$('#resBtn').innerHTML='📊 '+L('Natijalar','Results');
+ $$('#langSeg button').forEach(b=>b.classList.toggle('on',b.dataset.l===LANG));document.documentElement.lang=LANG==='en'?'en':'uz';document.title=L('Tarmoq ustaxonasi — laboratoriya','Network workshop — lab')}
+$('#stuBtn').onclick=startModal;$('#resBtn').onclick=results;
+$$('#langSeg button').forEach(b=>b.onclick=()=>{LANG=b.dataset.l;try{localStorage.setItem('netlab-lang',LANG)}catch(e){}topbar();render()});
+function curTheme(){const t=document.documentElement.dataset.theme;return t||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark')}
+$('#themeBtn').onclick=()=>{const t=curTheme()==='dark'?'light':'dark';document.documentElement.dataset.theme=t;try{localStorage.setItem('netlab-theme',t)}catch(e){}};
+try{const t=localStorage.getItem('netlab-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}
+$('#fsBtn').onclick=()=>{try{if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen()}catch(e){}};
+
+/* ===================== render loop ===================== */
+function changed(structural){NET=compute();drawCv();if(structural){renderPal();renderSide()}else{if(TAB==='cfg')live();if(TAB==='task')renderSide();else renderTabs()}refreshTaskQuiet();hint()}
+function render(){hidePM();$('#toast').classList.remove('on');NET=compute();renderPal();drawCv();renderSide();hint();topbar()}
+window.NL={get ST(){return ST},set ST(v){ST=v},get NET(){return NET},compute:()=>NET=compute(),run,dev,byName,LABS,TRS,setMode,loadItem,CUR,RES,ping,resolve,changed,addDev,addLink,select:id=>{SEL=id;renderSide();drawCv()},setTab:t=>{TAB=t;renderSide()}};
+render();flushQ();if(!RES.name)startModal();else setMode('lab');
+</script>
+</body>
+</html>
